@@ -49,7 +49,8 @@
     "lint": "eslint ./src",
     "prerelease": "yarn flow && yarn lint && yarn run clean && yarn build",
     "flow": "flow",
-    "prettierAll": "prettier --write --single-quote --trailing-comma es5 --print-width 120 'src/**/*.js'"
+    "prettierAll": "prettier --write --single-quote --trailing-comma es5 --print-width 120 'src/**/*.js'",
+    "precommit": "lint-staged"
   },
   "lint-staged": {
     "*.js": [
