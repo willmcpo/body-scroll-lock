@@ -1,0 +1,16 @@
+[ignore]
+
+[include]
+.*/src
+
+[libs]
+.*/flow-typed
+
+[options]
+module.system.node.resolve_dirname=node_modules
+
+module.file_ext=.js
+
+suppress_comment=\\(.\\|\n\\)*\\$FlowIgnoreLine
+
+[lints]

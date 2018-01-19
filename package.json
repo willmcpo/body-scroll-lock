@@ -1,0 +1,51 @@
+{
+  "name": "body-scroll-lock",
+  "version": "1.0.0",
+  "description": "Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element (eg. modal/lightbox/flyouts/nav-menus)",
+  "main": "index.js",
+  "author": "Will Po",
+  "license": "MIT",
+  "keywords": [
+    "ios",
+    "safari",
+    "android",
+    "mobile",
+    "tablet",
+    "scroll",
+    "body",
+    "modal",
+    "lightbox",
+    "react",
+    "javascript"
+  ],
+  "dependencies": {
+    "ua-parser-js": "^0.7.17"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.1",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-flow": "^6.23.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^4.15.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-babel": "^7.0.2",
+    "eslint-plugin-flowtype": "^2.41.0",
+    "eslint-plugin-import": "^2.8.0",
+    "flow-bin": "^0.63.1",
+    "jest": "^22.1.2",
+    "rimraf": "^2.6.2"
+  },
+  "scripts": {
+    "clean": "rimraf lib/",
+    "release": "npm version",
+    "postrelease": "yarn publish && git push --follow-tags",
+    "test": "jest",
+    "testw": "yarn test -- --watchAll",
+    "build": "babel src/ -d lib/",
+    "lint": "eslint ./src",
+    "prerelease": "yarn test && yarn flow && yarn lint && yarn run clean && yarn build",
+    "flow": "flow"
+  }
+}
