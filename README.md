@@ -1,7 +1,9 @@
+# body-scroll-lock
+
 ## Why body-scroll-lock ?
 Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element (eg. modal/lightbox/flyouts/nav-menus).
 
-Features:
+*Features:*
 
 - disables body scroll WITHOUT disabling scroll of a target element
 - works on iOS mobile/tablet
@@ -11,7 +13,7 @@ Features:
 - works with vanilla JS and frameworks such as React
 - supports nested target elements (eg. a modal that appears on top of a flyout)
 
-Aren't the other approaches sufficient?
+*Aren't the alternative approaches sufficient?*
 
 - the approach `document.body.ontouchmove = (e) => { e.preventDefault; return false; };` locks the
 body scroll, but ALSO locks the scroll of a target element (eg. modal).
@@ -38,7 +40,7 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
     const targetElement = document.querySelector("#someElementId");
       
       
-    // 3. ...in some event handler after showing the target element...
+    // 3. ...in some event handler after showing the target element...disable body scroll
     disableBodyScroll(targetElement);
      
      
@@ -56,23 +58,26 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
       targetElement = null;
       
       componentDidMount() {
+        // 2. Get a target element 
         this.targetElement = document.querySelector('#targetElementId');
       }
       
       showTargetElement = () => {
         // ... some logic to show target element
         
+        // 3. Disable body scroll
         disableBodyScroll(this.targetElement);
       };
       
       hideTargetElement = () => {
         // ... some logic to hide target element
         
+        // 4. Re-enable body scroll
         enableBodyScroll(this.targetElement);
       }
       
       componentWillUnmount() {
-        // Useful if we have called disableBodyScroll for multiple target elements,
+        // 5. Useful if we have called disableBodyScroll for multiple target elements,
         // and we just want a kill-switch to undo all that.
         clearAllScrollHandlers();
       }
@@ -87,14 +92,14 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
     }
 
 ### Demo
-https://www.www.www.com
+http://wp-os.s3-website-ap-southeast-2.amazonaws.com/body-scroll-lock-demo/index.html
 
 ### Functions
 
 | Function | Argument | Return | Description |   
 | :--- | :--- | :---: | :--- |
-| `disableBodyScroll` | targetElement: HTMLElement | void | Disables body scroll while enabling scroll on target element |
-| `enableBodyScroll` | targetElement: HTMLElement | void | Enables body scroll and removing listeners on target element |
-| `clearAllScrollHandlers` | null | void | Clears all scroll handlers |
+| `disableBodyScroll` | `targetElement: HTMLElement` | `void` | Disables body scroll while enabling scroll on target element |
+| `enableBodyScroll` | `targetElement: HTMLElement` | `void` | Enables body scroll and removing listeners on target element |
+| `clearAllScrollHandlers` | `null` | `void` | Clears all scroll handlers |
     
     

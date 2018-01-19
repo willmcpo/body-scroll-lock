@@ -12,14 +12,14 @@ It's just a [JSON file](globals.json), so use it in whatever environment you lik
 ## Install
 
 ```
-$ npm install globals
+$ npm install --save globals
 ```
 
 
 ## Usage
 
 ```js
-const globals = require('globals');
+var globals = require('globals');
 
 console.log(globals.browser);
 /*
@@ -38,4 +38,4 @@ Each global is given a value of `true` or `false`. A value of `true` indicates t
 
 ## License
 
-MIT © [Sindre Sorhus](https://sindresorhus.com)
+MIT © [Sindre Sorhus](http://sindresorhus.com)
