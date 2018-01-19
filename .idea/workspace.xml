@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3d8dd0c6-f964-47d3-98eb-0e1053030ea1" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/examples/vanilla/index.html" afterPath="$PROJECT_DIR$/examples/vanilla/index.html" />
-    </list>
+    <list default="true" id="3d8dd0c6-f964-47d3-98eb-0e1053030ea1" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -26,12 +24,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/examples/vanilla/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="56" column="24" lean-forward="false" selection-start-line="56" selection-start-column="24" selection-end-line="56" selection-end-column="24" />
-              <folding />
+            <state relative-caret-position="470">
+              <caret line="70" column="51" lean-forward="false" selection-start-line="70" selection-start-column="51" selection-end-line="70" selection-end-column="51" />
+              <folding>
+                <element signature="e#9625#9632#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -46,10 +46,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="bodyScrollLock.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="bodyScrollLock.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/bodyScrollLock.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-272">
+            <state relative-caret-position="315">
               <caret line="21" column="109" lean-forward="false" selection-start-line="21" selection-start-column="109" selection-end-line="21" selection-end-column="109" />
               <folding />
             </state>
@@ -231,6 +231,11 @@
             <path>
               <item name="body-scroll-lock" type="b2602c69:ProjectViewProjectNode" />
               <item name="body-scroll-lock" type="462c0819:PsiDirectoryNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="body-scroll-lock" type="b2602c69:ProjectViewProjectNode" />
+              <item name="body-scroll-lock" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -290,12 +295,12 @@
       <workItem from="1516252611728" duration="1110000" />
       <workItem from="1516253943786" duration="15317000" />
       <workItem from="1516335984621" duration="5374000" />
-      <workItem from="1516360758239" duration="2512000" />
+      <workItem from="1516360758239" duration="2653000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28477000" />
+    <option name="totallyTimeSpent" value="28618000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="6" />
@@ -408,7 +413,7 @@
         <state relative-caret-position="1215">
           <caret line="81" column="10" lean-forward="true" selection-start-line="81" selection-start-column="10" selection-end-line="81" selection-end-column="10" />
           <folding>
-            <element signature="e#9625#9632#0" expanded="false" />
+            <element signature="e#9625#9632#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -687,18 +692,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/bodyScrollLock.js">
+    <entry file="file://$PROJECT_DIR$/examples/vanilla/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-272">
-          <caret line="21" column="109" lean-forward="false" selection-start-line="21" selection-start-column="109" selection-end-line="21" selection-end-column="109" />
-          <folding />
+        <state relative-caret-position="470">
+          <caret line="70" column="51" lean-forward="false" selection-start-line="70" selection-start-column="51" selection-end-line="70" selection-end-column="51" />
+          <folding>
+            <element signature="e#9625#9632#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/vanilla/index.html">
+    <entry file="file://$PROJECT_DIR$/src/bodyScrollLock.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="56" column="24" lean-forward="false" selection-start-line="56" selection-start-column="24" selection-end-line="56" selection-end-column="24" />
+        <state relative-caret-position="315">
+          <caret line="21" column="109" lean-forward="false" selection-start-line="21" selection-start-column="109" selection-end-line="21" selection-end-column="109" />
           <folding />
         </state>
       </provider>
