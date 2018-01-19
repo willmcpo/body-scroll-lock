@@ -1,6 +1,8 @@
 // @flow
 import { isMobileOrTabletSafari } from './utils/userAgent';
 
+type HandleScrollEvent = Event & WheelEvent;
+
 const earlierScrollHandlers: Array<(HandleScrollEvent) => boolean> = [];
 let previousPageY: number = -1;
 
@@ -9,8 +11,6 @@ let previousPageY: number = -1;
 let isBlocked: boolean = true;
 let unblockCounter: number = 0;
 let disableBodyScrollLockHolder: HTMLElement | null = null;
-
-type HandleScrollEvent = Event & WheelEvent;
 
 const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   const e = rawEvent || window.event;
