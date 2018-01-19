@@ -7,7 +7,7 @@ import { isMobileOrTabletSafari } from './utils/userAgent';
 
 type HandleScrollEvent = TouchEvent;
 
-const allTargetElements: {[any]: any} = {};
+const allTargetElements: { [any]: any } = {};
 let initialClientY: number = -1;
 
 const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
@@ -17,12 +17,9 @@ const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   return false;
 };
 
-const isTargetElementTotallyScrolled = (targetElement: any): boolean => (
+const isTargetElementTotallyScrolled = (targetElement: any): boolean =>
   // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
-  targetElement
-    ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight
-    : false
-);
+  targetElement ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight : false;
 
 const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => {
   const clientY = event.targetTouches[0].clientY - initialClientY;
