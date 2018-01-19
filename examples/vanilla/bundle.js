@@ -28,19 +28,17 @@ enableBodyScrollButton.onclick = function() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.disableBodyScroll = exports.clearAllScrollHandlers = exports.enableBodyScroll = undefined;
+exports.enableBodyScroll = exports.clearAllScrollHandlers = exports.disableBodyScroll = undefined;
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+// Adopted and modified solution from Bohdan Didukh (2017)
+// https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
 
 var _userAgent = require('./utils/userAgent');
 
-var earlierScrollHandlers = [];
-
-var previousPageY = -1;
-
-// We block scrolling up on initialisation.
-// We set unBlockCounter as 0 so it scrolling down works immediately.
-var isBlocked = true;
-var unblockCounter = 0;
-var disableBodyScrollLockHolder = null;
+var allTargetElements = {};
+var initialClientY = -1;
 
 var preventDefault = function preventDefault(rawEvent) {
   var e = rawEvent || window.event;
@@ -49,110 +47,76 @@ var preventDefault = function preventDefault(rawEvent) {
   return false;
 };
 
-var handleScroll = function handleScroll(e, targetElement) {
-  if (!targetElement) return false;
+var isTargetElementTotallyScrolled = function isTargetElementTotallyScrolled(targetElement
+// https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
+) {
+  return targetElement ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight : false;
+};
 
-  if (e.deltaY > 0 || previousPageY >= 0 && e.pageY < previousPageY) {
-    if (isBlocked) {
-      unblockCounter += 1;
+var handleScroll = function handleScroll(event, targetElement) {
+  var clientY = event.targetTouches[0].clientY - initialClientY;
 
-      if (unblockCounter === 1) {
-        isBlocked = false;
-        unblockCounter = 0;
-      } else {
-        return preventDefault(e);
-      }
-    }
-
-    if (targetElement.scrollTop + targetElement.offsetHeight === targetElement.scrollHeight) {
-      previousPageY = e.pageY;
-      isBlocked = true;
-      unblockCounter = 0;
-      return preventDefault(e);
-    }
-  } else if (e.deltaY < 0 || previousPageY >= 0 && e.pageY > previousPageY) {
-    if (isBlocked) {
-      unblockCounter -= 1;
-
-      if (unblockCounter === -1) {
-        isBlocked = false;
-        unblockCounter = 0;
-      } else {
-        return preventDefault(e);
-      }
-    }
-
-    if (targetElement.scrollTop === 0) {
-      previousPageY = e.pageY;
-      isBlocked = true;
-      unblockCounter = 0;
-      return preventDefault(e);
-    }
-  } else {
-    previousPageY = e.pageY;
-    return preventDefault(e);
+  if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
+    // element is at the top of its scroll
+    return preventDefault(event);
   }
 
-  previousPageY = e.pageY;
+  if (isTargetElementTotallyScrolled(targetElement) && clientY < 0) {
+    // element is at the top of its scroll
+    return preventDefault(event);
+  }
+
   return true;
 };
 
-var enableBodyScroll = exports.enableBodyScroll = function enableBodyScroll(targetElement) {
-  // If the holder of the body scroll lock is not equal to the provided element,
-  // return immediately (only the holder is able to re-enable the scroll).
-  if (disableBodyScrollLockHolder === targetElement) {
-    disableBodyScrollLockHolder = null;
+var disableBodyScroll = exports.disableBodyScroll = function disableBodyScroll(targetElement) {
+  if (_userAgent.isMobileOrTabletSafari) {
+    if (targetElement) {
+      allTargetElements[targetElement] = targetElement;
 
-    if (_userAgent.isMobileOrTabletSafari) {
-      document.body.ontouchmove = null;
-      document.body.ontouchend = null;
-    } else {
-      document.body.style.overflow = 'auto';
-      document.documentElement.style.overflow = 'auto';
+      targetElement.ontouchstart = function (event) {
+        if (event.targetTouches.length === 1) {
+          // detect single touch
+          initialClientY = event.targetTouches[0].clientY;
+        }
+      };
+      targetElement.ontouchmove = function (event) {
+        if (event.targetTouches.length === 1) {
+          // detect single touch
+          handleScroll(event, targetElement);
+        }
+      };
     }
-  } else if (_userAgent.isMobileOrTabletSafari) {
-    // Re-instate previous scrollHandler
-    document.body.ontouchmove = earlierScrollHandlers.pop();
+  } else {
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
   }
 };
 
 var clearAllScrollHandlers = exports.clearAllScrollHandlers = function clearAllScrollHandlers() {
-  // Clear all earlierScrollHandlers
-  earlierScrollHandlers.splice(0);
+  // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
+  Object.entries(allTargetElements).forEach(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        key = _ref2[0],
+        targetElement = _ref2[1];
 
-  // Clear the scroll lock holder
-  enableBodyScroll(disableBodyScrollLockHolder);
+    targetElement.ontouchstart = null;
+    targetElement.ontouchmove = null;
 
-  // Reset other initial values
-  previousPageY = -1;
-  isBlocked = true;
-  unblockCounter = 0;
+    allTargetElements.delete(key);
+  });
+
+  // Reset initial clientY
+  initialClientY = -1;
 };
 
-var disableBodyScroll = exports.disableBodyScroll = function disableBodyScroll(targetElement) {
-  // If there is already an element holding the disable body scroll lock, then
-  // return immediately.
-  if (!disableBodyScrollLockHolder) {
-    disableBodyScrollLockHolder = targetElement;
-  }
-
+var enableBodyScroll = exports.enableBodyScroll = function enableBodyScroll(targetElement) {
   if (_userAgent.isMobileOrTabletSafari) {
-    var scrollHandler = function scrollHandler(event) {
-      handleScroll(event, targetElement);
-    };
-
-    // If there was a previous scroll handler used, save it.
-    if (document.body.ontouchmove) {
-      earlierScrollHandlers.push(document.body.ontouchmove);
-    }
-
-    document.body.ontouchmove = scrollHandler;
-    document.body.ontouchend = function () {
-      previousPageY = -1;
-    };
+    targetElement.ontouchstart = null;
+    targetElement.ontouchmove = null;
   } else {
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
   }
 };
 },{"./utils/userAgent":3}],3:[function(require,module,exports){

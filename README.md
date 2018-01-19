@@ -12,6 +12,7 @@ Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/
 - works on Chrome/Firefox 
 - works with vanilla JS and frameworks such as React
 - supports nested target elements (eg. a modal that appears on top of a flyout)
+- `-webkit-overflow-scrolling: touch` still works
 
 *Aren't the alternative approaches sufficient?*
 
@@ -34,7 +35,6 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
     const bodyScrollLock = require('body-scroll-lock');
     const disableBodyScroll = bodyScrollLock.disableBodyScroll;
     const enableBodyScroll = bodyScrollLock.enableBodyScroll;
-    const clearAllScrollHandlers = bodyScrollLock.clearAllScrollHandlers;
       
     // 2. Get a target element (such as a modal/lightbox/flyout/nav). 
     const targetElement = document.querySelector("#someElementId");
@@ -52,7 +52,7 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
 ##### React/ES6
 
     // 1. Import the functions
-    import { disableBodyScroll, enableBodyScroll, clearAllScrollHandlers } from 'body-scroll-lock';
+    import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
       
     class SomeComponent extends React.Component {
       targetElement = null;
@@ -79,7 +79,7 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
       componentWillUnmount() {
         // 5. Useful if we have called disableBodyScroll for multiple target elements,
         // and we just want a kill-switch to undo all that.
-        clearAllScrollHandlers();
+        clearAllBodyScrollLocks();
       }
     
       render() {   
@@ -100,6 +100,8 @@ http://wp-os.s3-website-ap-southeast-2.amazonaws.com/body-scroll-lock-demo/index
 | :--- | :--- | :---: | :--- |
 | `disableBodyScroll` | `targetElement: HTMLElement` | `void` | Disables body scroll while enabling scroll on target element |
 | `enableBodyScroll` | `targetElement: HTMLElement` | `void` | Enables body scroll and removing listeners on target element |
-| `clearAllScrollHandlers` | `null` | `void` | Clears all scroll handlers |
+| `clearAllBodyScrollLocks` | `null` | `void` | Clears all scroll locks |
     
     
+## Reference
+https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi

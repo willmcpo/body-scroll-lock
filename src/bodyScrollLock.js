@@ -61,7 +61,7 @@ export const disableBodyScroll = (targetElement: any): void => {
   }
 };
 
-export const clearAllScrollHandlers = (): void => {
+export const clearAllBodyScrollLocks = (): void => {
   // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
   Object.entries(allTargetElements).forEach(([key, targetElement]: [any, any]) => {
     targetElement.ontouchstart = null;
