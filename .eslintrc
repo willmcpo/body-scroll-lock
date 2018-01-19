@@ -3,7 +3,8 @@
   "rules": {
     "flowtype/define-flow-type": 2,
     "arrow-parens": 0,
-    "no-param-reassign": 0
+    "no-param-reassign": 0,
+    "max-len": 0
   },
   "parser": "babel-eslint",
   "plugins": ["flowtype"],

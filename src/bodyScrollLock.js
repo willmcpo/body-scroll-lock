@@ -17,8 +17,8 @@ const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   return false;
 };
 
+// https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
 const isTargetElementTotallyScrolled = (targetElement: any): boolean =>
-  // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
   targetElement ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight : false;
 
 const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => {
