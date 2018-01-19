@@ -91,10 +91,10 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
       }
     }
 
-### Demo
+## Demo
 http://wp-os.s3-website-ap-southeast-2.amazonaws.com/body-scroll-lock-demo/index.html
 
-### Functions
+## Functions
 
 | Function | Argument | Return | Description |   
 | :--- | :--- | :---: | :--- |
