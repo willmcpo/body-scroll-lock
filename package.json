@@ -35,7 +35,10 @@
     "eslint-plugin-flowtype": "^2.41.0",
     "eslint-plugin-import": "^2.8.0",
     "flow-bin": "^0.63.1",
+    "husky": "^0.14.3",
     "jest": "^22.1.2",
+    "lint-staged": "^6.0.1",
+    "prettier": "^1.10.2",
     "rimraf": "^2.6.2"
   },
   "scripts": {
@@ -46,5 +49,11 @@
     "lint": "eslint ./src",
     "prerelease": "yarn flow && yarn lint && yarn run clean && yarn build",
     "flow": "flow"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write --single-quote --trailing-comma es5 --print-width 120",
+      "git add"
+    ]
   }
 }

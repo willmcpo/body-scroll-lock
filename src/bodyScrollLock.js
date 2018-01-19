@@ -1,16 +1,14 @@
 // @flow
+
+// Adopted and modified solution from Bohdan Didukh (2017)
+// https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
+
 import { isMobileOrTabletSafari } from './utils/userAgent';
 
-type HandleScrollEvent = Event & WheelEvent;
+type HandleScrollEvent = TouchEvent;
 
-const earlierScrollHandlers: Array<(HandleScrollEvent) => boolean> = [];
-let previousPageY: number = -1;
-
-// We block scrolling up on initialisation.
-// We set unBlockCounter as 0 so it scrolling down works immediately.
-let isBlocked: boolean = true;
-let unblockCounter: number = 0;
-let disableBodyScrollLockHolder: HTMLElement | null = null;
+const allTargetElements: {[any]: any} = {};
+let initialClientY: number = -1;
 
 const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   const e = rawEvent || window.event;
@@ -19,109 +17,72 @@ const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   return false;
 };
 
-const handleScroll = (e: HandleScrollEvent, targetElement: HTMLElement | null): boolean => {
-  if (!targetElement) return false;
+const isTargetElementTotallyScrolled = (targetElement: any): boolean => (
+  // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
+  targetElement
+    ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight
+    : false
+);
 
-  if (e.deltaY > 0 || (previousPageY >= 0 && e.pageY < previousPageY)) {
-    if (isBlocked) {
-      unblockCounter += 1;
+const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => {
+  const clientY = event.targetTouches[0].clientY - initialClientY;
 
-      if (unblockCounter === 1) {
-        isBlocked = false;
-        unblockCounter = 0;
-      } else {
-        return preventDefault(e);
-      }
-    }
-
-    if (targetElement.scrollTop + targetElement.offsetHeight === targetElement.scrollHeight) {
-      previousPageY = e.pageY;
-      isBlocked = true;
-      unblockCounter = 0;
-      return preventDefault(e);
-    }
-  } else if (e.deltaY < 0 || (previousPageY >= 0 && e.pageY > previousPageY)) {
-    if (isBlocked) {
-      unblockCounter -= 1;
-
-      if (unblockCounter === -1) {
-        isBlocked = false;
-        unblockCounter = 0;
-      } else {
-        return preventDefault(e);
-      }
-    }
-
-    if (targetElement.scrollTop === 0) {
-      previousPageY = e.pageY;
-      isBlocked = true;
-      unblockCounter = 0;
-      return preventDefault(e);
-    }
-  } else {
-    previousPageY = e.pageY;
-    return preventDefault(e);
+  if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
+    // element is at the top of its scroll
+    return preventDefault(event);
   }
 
-  previousPageY = e.pageY;
+  if (isTargetElementTotallyScrolled(targetElement) && clientY < 0) {
+    // element is at the top of its scroll
+    return preventDefault(event);
+  }
+
   return true;
 };
 
-export const enableBodyScroll = (targetElement: HTMLElement | null): void => {
-  // If the holder of the body scroll lock is not equal to the provided element,
-  // return immediately (only the holder is able to re-enable the scroll).
-  if (disableBodyScrollLockHolder === targetElement) {
-    disableBodyScrollLockHolder = null;
+export const disableBodyScroll = (targetElement: any): void => {
+  if (isMobileOrTabletSafari) {
+    if (targetElement) {
+      allTargetElements[targetElement] = targetElement;
 
-    if (isMobileOrTabletSafari) {
-      document.body.ontouchmove = null;
-      document.body.ontouchend = null;
-    } else {
-      document.body.style.overflow = 'auto';
-      document.documentElement.style.overflow = 'auto';
+      targetElement.ontouchstart = (event: HandleScrollEvent) => {
+        if (event.targetTouches.length === 1) {
+          // detect single touch
+          initialClientY = event.targetTouches[0].clientY;
+        }
+      };
+      targetElement.ontouchmove = (event: HandleScrollEvent) => {
+        if (event.targetTouches.length === 1) {
+          // detect single touch
+          handleScroll(event, targetElement);
+        }
+      };
     }
-  } else if (isMobileOrTabletSafari) {
-    // Re-instate previous scrollHandler
-    document.body.ontouchmove = earlierScrollHandlers.pop();
+  } else {
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
   }
 };
 
 export const clearAllScrollHandlers = (): void => {
-  // Clear all earlierScrollHandlers
-  earlierScrollHandlers.splice(0);
+  // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
+  Object.entries(allTargetElements).forEach(([key, targetElement]: [any, any]) => {
+    targetElement.ontouchstart = null;
+    targetElement.ontouchmove = null;
 
-  // Clear the scroll lock holder
-  enableBodyScroll(disableBodyScrollLockHolder);
+    allTargetElements.delete(key);
+  });
 
-  // Reset other initial values
-  previousPageY = -1;
-  isBlocked = true;
-  unblockCounter = 0;
+  // Reset initial clientY
+  initialClientY = -1;
 };
 
-export const disableBodyScroll = (targetElement: HTMLElement | null): void => {
-  // If there is already an element holding the disable body scroll lock, then
-  // return immediately.
-  if (!disableBodyScrollLockHolder) {
-    disableBodyScrollLockHolder = targetElement;
-  }
-
+export const enableBodyScroll = (targetElement: any): void => {
   if (isMobileOrTabletSafari) {
-    const scrollHandler = (event: HandleScrollEvent) => {
-      handleScroll(event, targetElement);
-    };
-
-    // If there was a previous scroll handler used, save it.
-    if (document.body.ontouchmove) {
-      earlierScrollHandlers.push(document.body.ontouchmove);
-    }
-
-    document.body.ontouchmove = scrollHandler;
-    document.body.ontouchend = () => {
-      previousPageY = -1;
-    };
+    targetElement.ontouchstart = null;
+    targetElement.ontouchmove = null;
   } else {
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
   }
 };
