@@ -67,7 +67,7 @@ export const clearAllBodyScrollLocks = (): void => {
     targetElement.ontouchstart = null;
     targetElement.ontouchmove = null;
 
-    allTargetElements.delete(key);
+    delete allTargetElements[key];
   });
 
   // Reset initial clientY
