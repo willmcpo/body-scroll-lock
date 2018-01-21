@@ -1,6 +1,6 @@
 {
   "name": "body-scroll-lock",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element (eg. modal/lightbox/flyouts/nav-menus)",
   "main": "lib/bodyScrollLock.js",
   "author": "Will Po",
