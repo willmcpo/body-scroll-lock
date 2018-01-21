@@ -31,66 +31,67 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
 
 ## Usage examples
 ##### Vanilla JS
-    
-    // 1. Import the functions
-    const bodyScrollLock = require('body-scroll-lock');
-    const disableBodyScroll = bodyScrollLock.disableBodyScroll;
-    const enableBodyScroll = bodyScrollLock.enableBodyScroll;
-      
-    // 2. Get a target element (such as a modal/lightbox/flyout/nav). 
-    const targetElement = document.querySelector("#someElementId");
-      
-      
-    // 3. ...in some event handler after showing the target element...disable body scroll
-    disableBodyScroll(targetElement);
-     
-     
-    // 4. ...in some event handler after hiding the target element...
-    enableBodyScroll(targetElement);
-    
+```javascript
+// 1. Import the functions
+const bodyScrollLock = require('body-scroll-lock');
+const disableBodyScroll = bodyScrollLock.disableBodyScroll;
+const enableBodyScroll = bodyScrollLock.enableBodyScroll;
+  
+// 2. Get a target element (such as a modal/lightbox/flyout/nav). 
+const targetElement = document.querySelector("#someElementId");
+  
+  
+// 3. ...in some event handler after showing the target element...disable body scroll
+disableBodyScroll(targetElement);
+ 
+ 
+// 4. ...in some event handler after hiding the target element...
+enableBodyScroll(targetElement);
+```
   
   
 ##### React/ES6
-
-    // 1. Import the functions
-    import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
-      
-    class SomeComponent extends React.Component {
-      targetElement = null;
-      
-      componentDidMount() {
-        // 2. Get a target element 
-        this.targetElement = document.querySelector('#targetElementId');
-      }
-      
-      showTargetElement = () => {
-        // ... some logic to show target element
-        
-        // 3. Disable body scroll
-        disableBodyScroll(this.targetElement);
-      };
-      
-      hideTargetElement = () => {
-        // ... some logic to hide target element
-        
-        // 4. Re-enable body scroll
-        enableBodyScroll(this.targetElement);
-      }
-      
-      componentWillUnmount() {
-        // 5. Useful if we have called disableBodyScroll for multiple target elements,
-        // and we just want a kill-switch to undo all that.
-        clearAllBodyScrollLocks();
-      }
+```javascript
+// 1. Import the functions
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+  
+class SomeComponent extends React.Component {
+  targetElement = null;
+  
+  componentDidMount() {
+    // 2. Get a target element 
+    this.targetElement = document.querySelector('#targetElementId');
+  }
+  
+  showTargetElement = () => {
+    // ... some logic to show target element
     
-      render() {   
-        return (
-          <div>
-            some JSX to go here
-          </div> 
-        );
-      }
-    }
+    // 3. Disable body scroll
+    disableBodyScroll(this.targetElement);
+  };
+  
+  hideTargetElement = () => {
+    // ... some logic to hide target element
+    
+    // 4. Re-enable body scroll
+    enableBodyScroll(this.targetElement);
+  }
+  
+  componentWillUnmount() {
+    // 5. Useful if we have called disableBodyScroll for multiple target elements,
+    // and we just want a kill-switch to undo all that.
+    clearAllBodyScrollLocks();
+  }
+
+  render() {   
+    return (
+      <div>
+        some JSX to go here
+      </div> 
+    );
+  }
+}
+```
 
 ## Demo
 http://wp-os.s3-website-ap-southeast-2.amazonaws.com/body-scroll-lock-demo/index.html
