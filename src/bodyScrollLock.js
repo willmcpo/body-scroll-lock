@@ -14,8 +14,6 @@ export const disableBodyScroll = (targetElement: any): void => {
 
       document.body.style.transform = `translateY(-${originalBodyScrollTop}px)`;
       document.body.style.position = 'fixed';
-      document.body.style.left = '0';
-      document.body.style.right = '0';
     } else {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
