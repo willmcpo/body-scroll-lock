@@ -67,21 +67,27 @@
 
         var _userAgent = require('./utils/userAgent');
 
-        var originalBodyPosition = void 0;
+        var originalBodyPosition = '';
 
+        var originalBodyScrollTop = 0;
         var allLockedTargetElements = {};
 
         var disableBodyScroll = (exports.disableBodyScroll = function disableBodyScroll(targetElement) {
           if (!allLockedTargetElements[targetElement]) {
             if (_userAgent.isMobileOrTabletSafari) {
               originalBodyPosition = document.body.style.position;
+              originalBodyScrollTop = document.body.scrollTop;
 
-              document.body.style.transform = 'translateY(-' + document.body.scrollTop + 'px)';
+              document.body.style.transform = 'translateY(-' + originalBodyScrollTop + 'px)';
               document.body.style.position = 'fixed';
+              document.body.style.left = '0';
+              document.body.style.right = '0';
             } else {
               document.body.style.overflow = 'hidden';
               document.documentElement.style.overflow = 'hidden';
             }
+
+            allLockedTargetElements[targetElement] = true;
           }
         });
 
@@ -89,6 +95,11 @@
           if (allLockedTargetElements[targetElement]) {
             if (_userAgent.isMobileOrTabletSafari) {
               document.body.style.position = originalBodyPosition;
+              document.body.style.transform = '';
+              window.scrollTo(0, originalBodyScrollTop);
+
+              originalBodyPosition = '';
+              originalBodyScrollTop = 0;
             } else {
               document.body.style.overflow = 'auto';
               document.documentElement.style.overflow = 'auto';
