@@ -7,25 +7,23 @@
   "repository": "https://github.com/willmcpo/body-scroll-lock.git",
   "license": "MIT",
   "keywords": [
-    "ios",
-    "safari",
-    "android",
-    "chrome",
-    "mobile",
-    "desktop",
-    "tablet",
+    "scroll",
     "lock",
     "freeze",
     "toggle",
     "disable",
-    "scroll",
-    "body",
+    "body scroll",
     "body scroll lock",
     "overflow",
     "modal",
     "lightbox",
     "react",
-    "vanilla"
+    "vanilla-js",
+    "angular",
+    "ios",
+    "mobile",
+    "desktop",
+    "tablet"
   ],
   "dependencies": {
     "ua-parser-js": "^0.7.17"
