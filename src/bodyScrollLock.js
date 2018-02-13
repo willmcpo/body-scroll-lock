@@ -104,5 +104,7 @@ export const enableBodyScroll = (targetElement: any): void => {
     targetElement.ontouchmove = null;
   } else if (firstTargetElement === targetElement) {
     setOverflowAuto();
+
+    firstTargetElement = null;
   }
 };
