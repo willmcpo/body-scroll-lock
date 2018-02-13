@@ -114,6 +114,24 @@
           return false;
         };
 
+        var setOverflowHidden = function setOverflowHidden() {
+          // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
+          // the responsiveness for some reason. Setting within a setTimeout fixes this.
+          setTimeout(function() {
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+          });
+        };
+
+        var setOverflowAuto = function setOverflowAuto() {
+          // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
+          // the responsiveness for some reason. Setting within a setTimeout fixes this.
+          setTimeout(function() {
+            document.body.style.overflow = 'auto';
+            document.documentElement.style.overflow = 'auto';
+          });
+        };
+
         // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
         var isTargetElementTotallyScrolled = function isTargetElementTotallyScrolled(targetElement) {
           return targetElement
@@ -156,26 +174,29 @@
               };
             }
           } else {
-            document.body.style.overflow = 'hidden';
-            document.documentElement.style.overflow = 'hidden';
+            setOverflowHidden();
           }
         });
 
         var clearAllBodyScrollLocks = (exports.clearAllBodyScrollLocks = function clearAllBodyScrollLocks() {
-          // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
-          Object.entries(allTargetElements).forEach(function(_ref) {
-            var _ref2 = _slicedToArray(_ref, 2),
-              key = _ref2[0],
-              targetElement = _ref2[1];
+          if (_userAgent.isMobileOrTabletSafari) {
+            // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
+            Object.entries(allTargetElements).forEach(function(_ref) {
+              var _ref2 = _slicedToArray(_ref, 2),
+                key = _ref2[0],
+                targetElement = _ref2[1];
 
-            targetElement.ontouchstart = null;
-            targetElement.ontouchmove = null;
+              targetElement.ontouchstart = null;
+              targetElement.ontouchmove = null;
 
-            delete allTargetElements[key];
-          });
+              delete allTargetElements[key];
+            });
 
-          // Reset initial clientY
-          initialClientY = -1;
+            // Reset initial clientY
+            initialClientY = -1;
+          } else {
+            setOverflowAuto();
+          }
         });
 
         var enableBodyScroll = (exports.enableBodyScroll = function enableBodyScroll(targetElement) {
@@ -183,8 +204,7 @@
             targetElement.ontouchstart = null;
             targetElement.ontouchmove = null;
           } else {
-            document.body.style.overflow = 'auto';
-            document.documentElement.style.overflow = 'auto';
+            setOverflowAuto();
           }
         });
       },
