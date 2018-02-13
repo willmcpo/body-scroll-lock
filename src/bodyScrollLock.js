@@ -17,6 +17,24 @@ const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   return false;
 };
 
+const setOverflowHidden = () => {
+  // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
+  // the responsiveness for some reason. Setting within a setTimeout fixes this.
+  setTimeout(() => {
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+  });
+};
+
+const setOverflowAuto = () => {
+  // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
+  // the responsiveness for some reason. Setting within a setTimeout fixes this.
+  setTimeout(() => {
+    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
+  });
+};
+
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
 const isTargetElementTotallyScrolled = (targetElement: any): boolean =>
   targetElement ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight : false;
@@ -56,22 +74,25 @@ export const disableBodyScroll = (targetElement: any): void => {
       };
     }
   } else {
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
+    setOverflowHidden();
   }
 };
 
 export const clearAllBodyScrollLocks = (): void => {
-  // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
-  Object.entries(allTargetElements).forEach(([key, targetElement]: [any, any]) => {
-    targetElement.ontouchstart = null;
-    targetElement.ontouchmove = null;
+  if (isMobileOrTabletSafari) {
+    // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
+    Object.entries(allTargetElements).forEach(([key, targetElement]: [any, any]) => {
+      targetElement.ontouchstart = null;
+      targetElement.ontouchmove = null;
 
-    delete allTargetElements[key];
-  });
+      delete allTargetElements[key];
+    });
 
-  // Reset initial clientY
-  initialClientY = -1;
+    // Reset initial clientY
+    initialClientY = -1;
+  } else {
+    setOverflowAuto();
+  }
 };
 
 export const enableBodyScroll = (targetElement: any): void => {
@@ -79,7 +100,6 @@ export const enableBodyScroll = (targetElement: any): void => {
     targetElement.ontouchstart = null;
     targetElement.ontouchmove = null;
   } else {
-    document.body.style.overflow = 'auto';
-    document.documentElement.style.overflow = 'auto';
+    setOverflowAuto();
   }
 };
