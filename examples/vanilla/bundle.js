@@ -104,6 +104,7 @@
 
         var _userAgent = require('./utils/userAgent');
 
+        var firstTargetElement = null;
         var allTargetElements = {};
         var initialClientY = -1;
 
@@ -176,6 +177,8 @@
           } else {
             setOverflowHidden();
           }
+
+          if (!firstTargetElement) firstTargetElement = targetElement;
         });
 
         var clearAllBodyScrollLocks = (exports.clearAllBodyScrollLocks = function clearAllBodyScrollLocks() {
@@ -196,6 +199,8 @@
             initialClientY = -1;
           } else {
             setOverflowAuto();
+
+            firstTargetElement = null;
           }
         });
 
@@ -203,8 +208,10 @@
           if (_userAgent.isMobileOrTabletSafari) {
             targetElement.ontouchstart = null;
             targetElement.ontouchmove = null;
-          } else {
+          } else if (firstTargetElement === targetElement) {
             setOverflowAuto();
+
+            firstTargetElement = null;
           }
         });
       },
