@@ -95,6 +95,8 @@ export const clearAllBodyScrollLocks = (): void => {
     initialClientY = -1;
   } else {
     setOverflowAuto();
+
+    firstTargetElement = null;
   }
 };
 
