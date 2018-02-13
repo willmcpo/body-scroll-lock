@@ -7,6 +7,7 @@ import { isMobileOrTabletSafari } from './utils/userAgent';
 
 type HandleScrollEvent = TouchEvent;
 
+let firstTargetElement: any = null;
 const allTargetElements: { [any]: any } = {};
 let initialClientY: number = -1;
 
@@ -76,6 +77,8 @@ export const disableBodyScroll = (targetElement: any): void => {
   } else {
     setOverflowHidden();
   }
+
+  if (!firstTargetElement) firstTargetElement = targetElement;
 };
 
 export const clearAllBodyScrollLocks = (): void => {
@@ -99,7 +102,7 @@ export const enableBodyScroll = (targetElement: any): void => {
   if (isMobileOrTabletSafari) {
     targetElement.ontouchstart = null;
     targetElement.ontouchmove = null;
-  } else {
+  } else if (firstTargetElement === targetElement) {
     setOverflowAuto();
   }
 };
