@@ -1,4 +1,4 @@
-# body-scroll-lock
+![alt body-scroll-lock](https://raw.githubusercontent.com/willmcpo/body-scroll-lock/master/images/logo.png)
 
 ## Why body-scroll-lock ?
 Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element (eg. modal/lightbox/flyouts/nav-menus).
