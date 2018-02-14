@@ -81,6 +81,8 @@ class SomeComponent extends React.Component {
   componentWillUnmount() {
     // 5. Useful if we have called disableBodyScroll for multiple target elements,
     // and we just want a kill-switch to undo all that.
+    // OR useful for if the `hideTargetElement()` function got circumvented eg. visitor 
+    // clicks a link which takes him/her to a different page within the app.
     clearAllBodyScrollLocks();
   }
 
@@ -112,6 +114,6 @@ within the modal has been reached).
 | `clearAllBodyScrollLocks` | `null` | `void` | Clears all scroll locks |
     
     
-## Reference
+## References
 https://medium.com/jsdownunder/locking-body-scroll-for-all-devices-22def9615177
 https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
