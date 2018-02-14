@@ -1,4 +1,4 @@
-<p align="left" style="margin-left: -4px;"> <img width="675" src="https://raw.githubusercontent.com/willmcpo/body-scroll-lock/master/images/logo.png" alt="Body scroll lock...just works with everything ;-)" /> </p>
+<p align="left"> <img width="675" src="https://raw.githubusercontent.com/willmcpo/body-scroll-lock/master/images/logo.png" alt="Body scroll lock...just works with everything ;-)" /> </p>
 
 ## Why body-scroll-lock ?
 Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element (eg. modal/lightbox/flyouts/nav-menus).
