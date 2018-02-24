@@ -12,4 +12,4 @@ const getBrowser = () => {
 
 export const isMobileOrTablet = isMobileDevice() || isTabletDevice();
 export const isMobileOrTabletSafari =
-  typeof window !== 'undefined' && isMobileOrTablet && getBrowser().name.includes('Safari');
+  typeof window !== 'undefined' && isMobileOrTablet && getBrowser().name.indexOf('Safari') >= 0;
