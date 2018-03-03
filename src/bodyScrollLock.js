@@ -1,9 +1,10 @@
 // @flow
-
+import UAParser from 'ua-parser-js';
 // Adopted and modified solution from Bohdan Didukh (2017)
 // https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
 
-import { isMobileOrTabletSafari } from './utils/userAgent';
+const parser = new UAParser();
+const isIosDevice = typeof window !== 'undefined' && parser.getOS().name === 'iOS';
 
 type HandleScrollEvent = TouchEvent;
 
@@ -57,7 +58,7 @@ const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => 
 };
 
 export const disableBodyScroll = (targetElement: any): void => {
-  if (isMobileOrTabletSafari) {
+  if (isIosDevice) {
     if (targetElement) {
       allTargetElements[targetElement] = targetElement;
 
@@ -82,7 +83,7 @@ export const disableBodyScroll = (targetElement: any): void => {
 };
 
 export const clearAllBodyScrollLocks = (): void => {
-  if (isMobileOrTabletSafari) {
+  if (isIosDevice) {
     // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
     Object.entries(allTargetElements).forEach(([key, targetElement]: [any, any]) => {
       targetElement.ontouchstart = null;
@@ -101,7 +102,7 @@ export const clearAllBodyScrollLocks = (): void => {
 };
 
 export const enableBodyScroll = (targetElement: any): void => {
-  if (isMobileOrTabletSafari) {
+  if (isIosDevice) {
     targetElement.ontouchstart = null;
     targetElement.ontouchmove = null;
   } else if (firstTargetElement === targetElement) {

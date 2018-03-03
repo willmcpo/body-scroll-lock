@@ -99,10 +99,19 @@
           };
         })();
 
+        var _uaParserJs = require('ua-parser-js');
+
+        var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
+
+        function _interopRequireDefault(obj) {
+          return obj && obj.__esModule ? obj : { default: obj };
+        }
+
         // Adopted and modified solution from Bohdan Didukh (2017)
         // https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
 
-        var _userAgent = require('./utils/userAgent');
+        var parser = new _uaParserJs2.default();
+        var isIosDevice = typeof window !== 'undefined' && parser.getOS().name === 'iOS';
 
         var firstTargetElement = null;
         var allTargetElements = {};
@@ -157,7 +166,7 @@
         };
 
         var disableBodyScroll = (exports.disableBodyScroll = function disableBodyScroll(targetElement) {
-          if (_userAgent.isMobileOrTabletSafari) {
+          if (isIosDevice) {
             if (targetElement) {
               allTargetElements[targetElement] = targetElement;
 
@@ -182,7 +191,7 @@
         });
 
         var clearAllBodyScrollLocks = (exports.clearAllBodyScrollLocks = function clearAllBodyScrollLocks() {
-          if (_userAgent.isMobileOrTabletSafari) {
+          if (isIosDevice) {
             // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
             Object.entries(allTargetElements).forEach(function(_ref) {
               var _ref2 = _slicedToArray(_ref, 2),
@@ -205,7 +214,7 @@
         });
 
         var enableBodyScroll = (exports.enableBodyScroll = function enableBodyScroll(targetElement) {
-          if (_userAgent.isMobileOrTabletSafari) {
+          if (isIosDevice) {
             targetElement.ontouchstart = null;
             targetElement.ontouchmove = null;
           } else if (firstTargetElement === targetElement) {
@@ -215,31 +224,9 @@
           }
         });
       },
-      { './utils/userAgent': 3 },
+      { 'ua-parser-js': 3 },
     ],
     3: [
-      function(require, module, exports) {
-        'use strict';
-
-        Object.defineProperty(exports, '__esModule', {
-          value: true,
-        });
-        exports.isIosDevice = undefined;
-
-        var _uaParserJs = require('ua-parser-js');
-
-        var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
-
-        function _interopRequireDefault(obj) {
-          return obj && obj.__esModule ? obj : { default: obj };
-        }
-
-        var parser = new _uaParserJs2.default();
-        var isIosDevice = (exports.isIosDevice = typeof window !== 'undefined' && parser.getOS().name === 'iOS');
-      },
-      { 'ua-parser-js': 4 },
-    ],
-    4: [
       function(require, module, exports) {
         /**
          * UAParser.js v0.7.17
