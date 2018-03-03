@@ -224,7 +224,7 @@
         Object.defineProperty(exports, '__esModule', {
           value: true,
         });
-        exports.isMobileOrTabletSafari = exports.isMobileOrTablet = undefined;
+        exports.isIosDevice = undefined;
 
         var _uaParserJs = require('ua-parser-js');
 
@@ -235,24 +235,7 @@
         }
 
         var parser = new _uaParserJs2.default();
-
-        var isMobileDevice = function isMobileDevice() {
-          return typeof window !== 'undefined' && parser.getDevice().type === 'mobile';
-        };
-        var isTabletDevice = function isTabletDevice() {
-          return typeof window !== 'undefined' && parser.getDevice().type === 'tablet';
-        };
-
-        var getBrowser = function getBrowser() {
-          var _parser$getResult = parser.getResult(),
-            browser = _parser$getResult.browser;
-
-          return browser;
-        };
-
-        var isMobileOrTablet = (exports.isMobileOrTablet = isMobileDevice() || isTabletDevice());
-        var isMobileOrTabletSafari = (exports.isMobileOrTabletSafari =
-          typeof window !== 'undefined' && isMobileOrTablet && getBrowser().name.includes('Safari'));
+        var isIosDevice = (exports.isIosDevice = typeof window !== 'undefined' && parser.getOS().name === 'iOS');
       },
       { 'ua-parser-js': 4 },
     ],
