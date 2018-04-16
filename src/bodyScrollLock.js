@@ -11,6 +11,8 @@ type HandleScrollEvent = TouchEvent;
 let firstTargetElement: any = null;
 const allTargetElements: { [any]: any } = {};
 let initialClientY: number = -1;
+let previousBodyOverflowSetting = '';
+let previousDocumentElementOverflowSetting = '';
 
 const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   const e = rawEvent || window.event;
@@ -23,6 +25,8 @@ const setOverflowHidden = () => {
   // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
   // the responsiveness for some reason. Setting within a setTimeout fixes this.
   setTimeout(() => {
+    previousBodyOverflowSetting = document.body.style.overflow;
+    previousDocumentElementOverflowSetting = document.documentElement.style.overflow;
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
   });
@@ -32,8 +36,8 @@ const setOverflowAuto = () => {
   // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
   // the responsiveness for some reason. Setting within a setTimeout fixes this.
   setTimeout(() => {
-    document.body.style.overflow = 'auto';
-    document.documentElement.style.overflow = 'auto';
+    document.body.style.overflow = previousBodyOverflowSetting;
+    document.documentElement.style.overflow = previousDocumentElementOverflowSetting;
   });
 };
 
