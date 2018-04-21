@@ -116,6 +116,8 @@
         var firstTargetElement = null;
         var allTargetElements = {};
         var initialClientY = -1;
+        var previousBodyOverflowSetting = '';
+        var previousDocumentElementOverflowSetting = '';
 
         var preventDefault = function preventDefault(rawEvent) {
           var e = rawEvent || window.event;
@@ -128,6 +130,8 @@
           // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
           // the responsiveness for some reason. Setting within a setTimeout fixes this.
           setTimeout(function() {
+            previousBodyOverflowSetting = document.body.style.overflow;
+            previousDocumentElementOverflowSetting = document.documentElement.style.overflow;
             document.body.style.overflow = 'hidden';
             document.documentElement.style.overflow = 'hidden';
           });
@@ -137,8 +141,8 @@
           // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
           // the responsiveness for some reason. Setting within a setTimeout fixes this.
           setTimeout(function() {
-            document.body.style.overflow = 'auto';
-            document.documentElement.style.overflow = 'auto';
+            document.body.style.overflow = previousBodyOverflowSetting;
+            document.documentElement.style.overflow = previousDocumentElementOverflowSetting;
           });
         };
 
