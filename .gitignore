@@ -1,3 +1,5 @@
 lib
 node_modules
 .idea/*
+yarn-error.log
+package-lock.json
