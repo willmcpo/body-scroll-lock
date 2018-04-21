@@ -1,6 +1,6 @@
 {
   "name": "body-scroll-lock",
-  "version": "2.3.5",
+  "version": "2.3.5-beta.1",
   "description": "Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element (eg. modal/lightbox/flyouts/nav-menus)",
   "main": "lib/bodyScrollLock.js",
   "author": "Will Po",
@@ -27,9 +27,7 @@
     "desktop",
     "tablet"
   ],
-  "dependencies": {
-    "ua-parser-js": "^0.7.17"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.1",

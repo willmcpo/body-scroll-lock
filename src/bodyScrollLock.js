@@ -1,11 +1,12 @@
 // @flow
-import UAParser from 'ua-parser-js';
 // Adopted and modified solution from Bohdan Didukh (2017)
 // https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
 
-const parser = new UAParser();
-const isIosDevice = typeof window !== 'undefined' && parser.getOS().name === 'iOS';
-
+const isIosDevice =
+  typeof window !== 'undefined' &&
+  window.navigator &&
+  window.navigator.platform &&
+  /iPad|iPhone|iPod|(iPad Simulator)|(iPhone Simulator)|(iPod Simulator)/.test(window.navigator.platform);
 type HandleScrollEvent = TouchEvent;
 
 let firstTargetElement: any = null;
