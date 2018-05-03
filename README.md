@@ -38,7 +38,7 @@ const bodyScrollLock = require('body-scroll-lock');
 const disableBodyScroll = bodyScrollLock.disableBodyScroll;
 const enableBodyScroll = bodyScrollLock.enableBodyScroll;
   
-// 2. Get a target element (such as a modal/lightbox/flyout/nav). 
+// 2. Get a target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav). 
 const targetElement = document.querySelector("#someElementId");
   
   
@@ -60,7 +60,7 @@ class SomeComponent extends React.Component {
   targetElement = null;
   
   componentDidMount() {
-    // 2. Get a target element 
+    // 2. Get a target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav). 
     this.targetElement = document.querySelector('#targetElementId');
   }
   
