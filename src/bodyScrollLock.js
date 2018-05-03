@@ -33,7 +33,7 @@ const setOverflowHidden = () => {
   });
 };
 
-const setOverflowAuto = () => {
+const restoreOverflowSetting = () => {
   // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
   // the responsiveness for some reason. Setting within a setTimeout fixes this.
   setTimeout(() => {
@@ -100,7 +100,7 @@ export const clearAllBodyScrollLocks = (): void => {
     // Reset initial clientY
     initialClientY = -1;
   } else {
-    setOverflowAuto();
+    restoreOverflowSetting();
 
     firstTargetElement = null;
   }
@@ -111,7 +111,7 @@ export const enableBodyScroll = (targetElement: any): void => {
     targetElement.ontouchstart = null;
     targetElement.ontouchmove = null;
   } else if (firstTargetElement === targetElement) {
-    setOverflowAuto();
+    restoreOverflowSetting();
 
     firstTargetElement = null;
   }
