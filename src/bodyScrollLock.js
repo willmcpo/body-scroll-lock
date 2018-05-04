@@ -28,12 +28,12 @@ const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
 };
 
 const setOverflowHidden = (options?: BodyScrollOptions) => {
-  const reserveScrollBarGab = !!options && options.reserveScrollBarGap === true;
+  const reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
   // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
   // the responsiveness for some reason. Setting within a setTimeout fixes this.
   setTimeout(() => {
     const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
-    if (reserveScrollBarGab && scrollBarGap > 0) {
+    if (reserveScrollBarGap && scrollBarGap > 0) {
       previousBodyPaddingRight = document.body.style.paddingRight;
       document.body.style.paddingRight = `${scrollBarGap}px`;
     }

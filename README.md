@@ -12,6 +12,7 @@ Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/
 - works on Chrome/Firefox 
 - works with vanilla JS and frameworks such as React / Angular
 - supports nested target elements (eg. a modal that appears on top of a flyout)
+- can reserve scrollbar width
 - `-webkit-overflow-scrolling: touch` still works
 
 *Aren't the alternative approaches sufficient?*
@@ -107,13 +108,29 @@ within the modal has been reached).
 
 ## Functions
 
-| Function | Argument | Return | Description |   
+| Function | Arguments | Return | Description |
 | :--- | :--- | :---: | :--- |
 | `disableBodyScroll` | `targetElement: HTMLElement` | `void` | Disables body scroll while enabling scroll on target element |
-| `enableBodyScroll` | `targetElement: HTMLElement` | `void` | Enables body scroll and removing listeners on target element |
+| `enableBodyScroll` | `targetElement: HTMLElement`<br/>`options: BodyScrollOptions` | `void` | Enables body scroll and removing listeners on target element |
 | `clearAllBodyScrollLocks` | `null` | `void` | Clears all scroll locks |
-    
-    
+
+## Options
+### reserveScrollBarGap
+**optional, default:** false
+
+If the overflow property of the body is set to hidden, the body widens by the width of the scrollbar. This produces an
+unpleasant flickering effect, especially on websites with centered content. If the `reserveScrollBarGap` option is set,
+this gap is filled by a `padding-right` on the body element. If `disableBodyScroll` is called for the last target element,
+or `clearAllBodyScrollLocks` is called, the `padding-right` is automatically reset to the previous value.
+``` js
+import { enableBodyScroll, BodyScrollOptions } from 'body-scroll-lock';
+
+const options: BodyScrollOptions = {
+    reserveScrollBarGap: true
+}
+
+enableBodyScroll(targetElement, options);
+```
 ## References
 https://medium.com/jsdownunder/locking-body-scroll-for-all-devices-22def9615177
 https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
