@@ -109,8 +109,8 @@
         var firstTargetElement = null;
         var allTargetElements = {};
         var initialClientY = -1;
-        var previousBodyOverflowSetting = '';
-        var previousDocumentElementOverflowSetting = '';
+        var previousBodyOverflowSetting = void 0;
+        var previousDocumentElementOverflowSetting = void 0;
         var previousBodyPaddingRight = void 0;
 
         var preventDefault = function preventDefault(rawEvent) {

@@ -16,8 +16,8 @@ type HandleScrollEvent = TouchEvent;
 let firstTargetElement: any = null;
 const allTargetElements: { [any]: any } = {};
 let initialClientY: number = -1;
-let previousBodyOverflowSetting = '';
-let previousDocumentElementOverflowSetting = '';
+let previousBodyOverflowSetting;
+let previousDocumentElementOverflowSetting;
 let previousBodyPaddingRight;
 
 const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
