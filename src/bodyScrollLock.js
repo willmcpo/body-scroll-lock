@@ -28,19 +28,27 @@ const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
 };
 
 const setOverflowHidden = (options?: BodyScrollOptions) => {
-  const reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
   // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
   // the responsiveness for some reason. Setting within a setTimeout fixes this.
   setTimeout(() => {
-    const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
-    if (reserveScrollBarGap && scrollBarGap > 0) {
-      previousBodyPaddingRight = document.body.style.paddingRight;
-      document.body.style.paddingRight = `${scrollBarGap}px`;
+    // If previousBodyPaddingRight is already set, don't set it again.
+    if (!previousBodyPaddingRight) {
+      const reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
+      const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
+
+      if (reserveScrollBarGap && scrollBarGap > 0) {
+        previousBodyPaddingRight = document.body.style.paddingRight;
+        document.body.style.paddingRight = `${scrollBarGap}px`;
+      }
     }
-    previousBodyOverflowSetting = document.body.style.overflow;
-    previousDocumentElementOverflowSetting = document.documentElement.style.overflow;
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
+
+    // If previousBodyOverflowSetting is already set, don't set it again.
+    if (!previousBodyOverflowSetting) {
+      previousBodyOverflowSetting = document.body.style.overflow;
+      previousDocumentElementOverflowSetting = document.documentElement.style.overflow;
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    }
   });
 };
 
@@ -50,10 +58,21 @@ const restoreOverflowSetting = () => {
   setTimeout(() => {
     if (previousBodyPaddingRight !== undefined) {
       document.body.style.paddingRight = previousBodyPaddingRight;
+
+      // Restore previousBodyPaddingRight to undefined so setOverflowHidden knows it
+      // can be set again.
       previousBodyPaddingRight = undefined;
     }
-    document.body.style.overflow = previousBodyOverflowSetting;
-    document.documentElement.style.overflow = previousDocumentElementOverflowSetting;
+
+    if (previousBodyOverflowSetting !== undefined) {
+      document.body.style.overflow = previousBodyOverflowSetting;
+      document.documentElement.style.overflow = previousDocumentElementOverflowSetting;
+
+      // Restore previousBodyOverflowSetting/previousDocumentElementOverflowSetting to undefined
+      // so setOverflowHidden knows it can be set again.
+      previousBodyOverflowSetting = undefined;
+      previousDocumentElementOverflowSetting = undefined;
+    }
   });
 };
 
@@ -79,7 +98,9 @@ const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => 
 
 export const disableBodyScroll = (targetElement: any, options?: BodyScrollOptions): void => {
   if (isIosDevice) {
-    if (targetElement) {
+    // targetElement must be provided, and disableBodyScroll must not have been
+    // called on this targetElement before.
+    if (targetElement && !allTargetElements[targetElement]) {
       allTargetElements[targetElement] = targetElement;
 
       targetElement.ontouchstart = (event: HandleScrollEvent) => {
