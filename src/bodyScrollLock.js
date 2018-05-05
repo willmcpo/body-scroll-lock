@@ -2,6 +2,10 @@
 // Adopted and modified solution from Bohdan Didukh (2017)
 // https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
 
+export interface BodyScrollOptions {
+  reserveScrollBarGap?: boolean;
+}
+
 const isIosDevice =
   typeof window !== 'undefined' &&
   window.navigator &&
@@ -14,6 +18,7 @@ const allTargetElements: { [any]: any } = {};
 let initialClientY: number = -1;
 let previousBodyOverflowSetting = '';
 let previousDocumentElementOverflowSetting = '';
+let previousBodyPaddingRight;
 
 const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   const e = rawEvent || window.event;
@@ -22,10 +27,16 @@ const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   return false;
 };
 
-const setOverflowHidden = () => {
+const setOverflowHidden = (options?: BodyScrollOptions) => {
+  const reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
   // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
   // the responsiveness for some reason. Setting within a setTimeout fixes this.
   setTimeout(() => {
+    const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
+    if (reserveScrollBarGap && scrollBarGap > 0) {
+      previousBodyPaddingRight = document.body.style.paddingRight;
+      document.body.style.paddingRight = `${scrollBarGap}px`;
+    }
     previousBodyOverflowSetting = document.body.style.overflow;
     previousDocumentElementOverflowSetting = document.documentElement.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -37,6 +48,10 @@ const restoreOverflowSetting = () => {
   // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
   // the responsiveness for some reason. Setting within a setTimeout fixes this.
   setTimeout(() => {
+    if (previousBodyPaddingRight !== undefined) {
+      document.body.style.paddingRight = previousBodyPaddingRight;
+      previousBodyPaddingRight = undefined;
+    }
     document.body.style.overflow = previousBodyOverflowSetting;
     document.documentElement.style.overflow = previousDocumentElementOverflowSetting;
   });
@@ -62,7 +77,7 @@ const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => 
   return true;
 };
 
-export const disableBodyScroll = (targetElement: any): void => {
+export const disableBodyScroll = (targetElement: any, options?: BodyScrollOptions): void => {
   if (isIosDevice) {
     if (targetElement) {
       allTargetElements[targetElement] = targetElement;
@@ -81,7 +96,7 @@ export const disableBodyScroll = (targetElement: any): void => {
       };
     }
   } else {
-    setOverflowHidden();
+    setOverflowHidden(options);
   }
 
   if (!firstTargetElement) firstTargetElement = targetElement;
