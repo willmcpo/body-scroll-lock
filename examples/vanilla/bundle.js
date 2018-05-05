@@ -125,7 +125,7 @@
           // the responsiveness for some reason. Setting within a setTimeout fixes this.
           setTimeout(function() {
             // If previousBodyPaddingRight is already set, don't set it again.
-            if (!previousBodyPaddingRight) {
+            if (previousBodyPaddingRight === undefined) {
               var _reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
               var scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
 
@@ -136,7 +136,7 @@
             }
 
             // If previousBodyOverflowSetting is already set, don't set it again.
-            if (!previousBodyOverflowSetting) {
+            if (previousBodyOverflowSetting === undefined) {
               previousBodyOverflowSetting = document.body.style.overflow;
               previousDocumentElementOverflowSetting = document.documentElement.style.overflow;
               document.body.style.overflow = 'hidden';
