@@ -14,7 +14,7 @@ const isIosDevice =
 type HandleScrollEvent = TouchEvent;
 
 let firstTargetElement: any = null;
-const allTargetElements: { [any]: any } = [];
+let allTargetElements: [any] = [];
 let initialClientY: number = -1;
 let previousBodyOverflowSetting;
 let previousDocumentElementOverflowSetting;
