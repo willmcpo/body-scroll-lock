@@ -110,7 +110,6 @@
         var allTargetElements = {};
         var initialClientY = -1;
         var previousBodyOverflowSetting = void 0;
-        var previousDocumentElementOverflowSetting = void 0;
         var previousBodyPaddingRight = void 0;
 
         var preventDefault = function preventDefault(rawEvent) {
@@ -138,9 +137,7 @@
             // If previousBodyOverflowSetting is already set, don't set it again.
             if (previousBodyOverflowSetting === undefined) {
               previousBodyOverflowSetting = document.body.style.overflow;
-              previousDocumentElementOverflowSetting = document.documentElement.style.overflow;
               document.body.style.overflow = 'hidden';
-              document.documentElement.style.overflow = 'hidden';
             }
           });
         };
@@ -159,12 +156,10 @@
 
             if (previousBodyOverflowSetting !== undefined) {
               document.body.style.overflow = previousBodyOverflowSetting;
-              document.documentElement.style.overflow = previousDocumentElementOverflowSetting;
 
-              // Restore previousBodyOverflowSetting/previousDocumentElementOverflowSetting to undefined
+              // Restore previousBodyOverflowSetting to undefined
               // so setOverflowHidden knows it can be set again.
               previousBodyOverflowSetting = undefined;
-              previousDocumentElementOverflowSetting = undefined;
             }
           });
         };
@@ -246,6 +241,8 @@
           if (isIosDevice) {
             targetElement.ontouchstart = null;
             targetElement.ontouchmove = null;
+
+            delete allTargetElements[targetElement];
           } else if (firstTargetElement === targetElement) {
             restoreOverflowSetting();
 
