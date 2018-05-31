@@ -186,9 +186,9 @@
             }
           } else {
             setOverflowHidden(options);
-          }
 
-          if (!firstTargetElement) firstTargetElement = targetElement;
+            if (!firstTargetElement) firstTargetElement = targetElement;
+          }
         });
 
         var clearAllBodyScrollLocks = (exports.clearAllBodyScrollLocks = function clearAllBodyScrollLocks() {
@@ -197,9 +197,9 @@
             allTargetElements.forEach(function(targetElement) {
               targetElement.ontouchstart = null;
               targetElement.ontouchmove = null;
-
-              allTargetElements = [];
             });
+
+            allTargetElements = [];
 
             // Reset initial clientY
             initialClientY = -1;
