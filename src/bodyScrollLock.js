@@ -17,7 +17,6 @@ let firstTargetElement: any = null;
 const allTargetElements: { [any]: any } = {};
 let initialClientY: number = -1;
 let previousBodyOverflowSetting;
-let previousDocumentElementOverflowSetting;
 let previousBodyPaddingRight;
 
 const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
@@ -65,10 +64,9 @@ const restoreOverflowSetting = () => {
     if (previousBodyOverflowSetting !== undefined) {
       document.body.style.overflow = previousBodyOverflowSetting;
 
-      // Restore previousBodyOverflowSetting/previousDocumentElementOverflowSetting to undefined
+      // Restore previousBodyOverflowSetting to undefined
       // so setOverflowHidden knows it can be set again.
       previousBodyOverflowSetting = undefined;
-      previousDocumentElementOverflowSetting = undefined;
     }
   });
 };
@@ -143,6 +141,8 @@ export const enableBodyScroll = (targetElement: any): void => {
   if (isIosDevice) {
     targetElement.ontouchstart = null;
     targetElement.ontouchmove = null;
+
+    delete allTargetElements[targetElement];
   } else if (firstTargetElement === targetElement) {
     restoreOverflowSetting();
 
