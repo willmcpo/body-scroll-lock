@@ -45,9 +45,7 @@ const setOverflowHidden = (options?: BodyScrollOptions) => {
     // If previousBodyOverflowSetting is already set, don't set it again.
     if (previousBodyOverflowSetting === undefined) {
       previousBodyOverflowSetting = document.body.style.overflow;
-      previousDocumentElementOverflowSetting = document.documentElement.style.overflow;
       document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
     }
   });
 };
@@ -66,7 +64,6 @@ const restoreOverflowSetting = () => {
 
     if (previousBodyOverflowSetting !== undefined) {
       document.body.style.overflow = previousBodyOverflowSetting;
-      document.documentElement.style.overflow = previousDocumentElementOverflowSetting;
 
       // Restore previousBodyOverflowSetting/previousDocumentElementOverflowSetting to undefined
       // so setOverflowHidden knows it can be set again.
