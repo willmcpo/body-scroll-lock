@@ -113,9 +113,9 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
     }
   } else {
     setOverflowHidden(options);
-  }
 
-  if (!firstTargetElement) firstTargetElement = targetElement;
+    if (!firstTargetElement) firstTargetElement = targetElement;
+  }
 };
 
 export const clearAllBodyScrollLocks = (): void => {
@@ -124,9 +124,9 @@ export const clearAllBodyScrollLocks = (): void => {
     allTargetElements.forEach((targetElement: any) => {
       targetElement.ontouchstart = null;
       targetElement.ontouchmove = null;
-
-      allTargetElements = [];
     });
+
+    allTargetElements = [];
 
     // Reset initial clientY
     initialClientY = -1;
