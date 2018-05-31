@@ -64,39 +64,16 @@
           value: true,
         });
 
-        var _slicedToArray = (function() {
-          function sliceIterator(arr, i) {
-            var _arr = [];
-            var _n = true;
-            var _d = false;
-            var _e = undefined;
-            try {
-              for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-                _arr.push(_s.value);
-                if (i && _arr.length === i) break;
-              }
-            } catch (err) {
-              _d = true;
-              _e = err;
-            } finally {
-              try {
-                if (!_n && _i['return']) _i['return']();
-              } finally {
-                if (_d) throw _e;
-              }
+        function _toConsumableArray(arr) {
+          if (Array.isArray(arr)) {
+            for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+              arr2[i] = arr[i];
             }
-            return _arr;
+            return arr2;
+          } else {
+            return Array.from(arr);
           }
-          return function(arr, i) {
-            if (Array.isArray(arr)) {
-              return arr;
-            } else if (Symbol.iterator in Object(arr)) {
-              return sliceIterator(arr, i);
-            } else {
-              throw new TypeError('Invalid attempt to destructure non-iterable instance');
-            }
-          };
-        })();
+        }
 
         var isIosDevice =
           typeof window !== 'undefined' &&
@@ -107,7 +84,7 @@
         // https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
 
         var firstTargetElement = null;
-        var allTargetElements = {};
+        var allTargetElements = [];
         var initialClientY = -1;
         var previousBodyOverflowSetting = void 0;
         var previousBodyPaddingRight = void 0;
@@ -191,8 +168,8 @@
           if (isIosDevice) {
             // targetElement must be provided, and disableBodyScroll must not have been
             // called on this targetElement before.
-            if (targetElement && !allTargetElements[targetElement]) {
-              allTargetElements[targetElement] = targetElement;
+            if (targetElement && !allTargetElements.includes(targetElement)) {
+              allTargetElements = [].concat(_toConsumableArray(allTargetElements), [targetElement]);
 
               targetElement.ontouchstart = function(event) {
                 if (event.targetTouches.length === 1) {
@@ -217,15 +194,11 @@
         var clearAllBodyScrollLocks = (exports.clearAllBodyScrollLocks = function clearAllBodyScrollLocks() {
           if (isIosDevice) {
             // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
-            Object.entries(allTargetElements).forEach(function(_ref) {
-              var _ref2 = _slicedToArray(_ref, 2),
-                key = _ref2[0],
-                targetElement = _ref2[1];
-
+            allTargetElements.forEach(function(targetElement) {
               targetElement.ontouchstart = null;
               targetElement.ontouchmove = null;
 
-              delete allTargetElements[key];
+              allTargetElements = [];
             });
 
             // Reset initial clientY
@@ -242,7 +215,9 @@
             targetElement.ontouchstart = null;
             targetElement.ontouchmove = null;
 
-            delete allTargetElements[targetElement];
+            allTargetElements = allTargetElements.filter(function(element) {
+              return element !== targetElement;
+            });
           } else if (firstTargetElement === targetElement) {
             restoreOverflowSetting();
 

@@ -13,8 +13,8 @@ const isIosDevice =
   /iPad|iPhone|iPod|(iPad Simulator)|(iPhone Simulator)|(iPod Simulator)/.test(window.navigator.platform);
 type HandleScrollEvent = TouchEvent;
 
-let firstTargetElement: any = null;
-let allTargetElements: [any] = [];
+let firstTargetElement: HTMLElement | null = null;
+let allTargetElements: Array<HTMLElement> = [];
 let initialClientY: number = -1;
 let previousBodyOverflowSetting;
 let previousBodyPaddingRight;
