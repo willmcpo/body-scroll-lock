@@ -142,9 +142,7 @@ export const enableBodyScroll = (targetElement: any): void => {
     targetElement.ontouchstart = null;
     targetElement.ontouchmove = null;
 
-    allTargetElements = allTargetElements.filter(
-      elem => elem !== targetElement,
-    );
+    allTargetElements = allTargetElements.filter(element => element !== targetElement);
   } else if (firstTargetElement === targetElement) {
     restoreOverflowSetting();
 
