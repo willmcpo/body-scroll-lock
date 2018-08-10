@@ -154,12 +154,12 @@ export const enableBodyScroll = (targetElement: any): void => {
     targetElement.ontouchstart = null;
     targetElement.ontouchmove = null;
 
-    if (documentListenerAdded) {
+    allTargetElements = allTargetElements.filter(element => element !== targetElement);
+
+    if (documentListenerAdded && allTargetElements.length === 0) {
       document.removeEventListener('touchmove', preventDefault, { passive: false });
       documentListenerAdded = false;
     }
-
-    allTargetElements = allTargetElements.filter(element => element !== targetElement);
   } else if (firstTargetElement === targetElement) {
     restoreOverflowSetting();
 
