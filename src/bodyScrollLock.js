@@ -110,7 +110,7 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
           handleScroll(event, targetElement);
         }
       };
-      targetElement.addEventListener('touchmove', targetElement.lockBodyScroll, {
+      document.addEventListener('touchmove', targetElement.lockBodyScroll, {
         passive: false,
       });
     }
@@ -126,7 +126,7 @@ export const clearAllBodyScrollLocks = (): void => {
     // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
     allTargetElements.forEach((targetElement: any) => {
       targetElement.ontouchstart = null;
-      targetElement.removeEventListener('touchmove', targetElement.lockBodyScroll, {
+      document.removeEventListener('touchmove', targetElement.lockBodyScroll, {
         passive: false,
       });
       targetElement.lockBodyScroll = null;
@@ -146,7 +146,7 @@ export const clearAllBodyScrollLocks = (): void => {
 export const enableBodyScroll = (targetElement: any): void => {
   if (isIosDevice) {
     targetElement.ontouchstart = null;
-    targetElement.removeEventListener('touchmove', targetElement.lockBodyScroll, {
+    document.removeEventListener('touchmove', targetElement.lockBodyScroll, {
       passive: false,
     });
     targetElement.lockBodyScroll = null;
