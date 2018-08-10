@@ -15,6 +15,7 @@ type HandleScrollEvent = TouchEvent;
 
 let firstTargetElement: HTMLElement | null = null;
 let allTargetElements: Array<HTMLElement> = [];
+let documentListenerAdded: boolean = false;
 let initialClientY: number = -1;
 let previousBodyOverflowSetting;
 let previousBodyPaddingRight;
@@ -88,6 +89,7 @@ const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => 
     return preventDefault(event);
   }
 
+  event.stopPropagation();
   return true;
 };
 
@@ -110,6 +112,17 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
           handleScroll(event, targetElement);
         }
       };
+
+      if (!documentListenerAdded) {
+        document.addEventListener(
+          'touchmove',
+          e => {
+            e.preventDefault();
+          },
+          { passive: false }
+        );
+        documentListenerAdded = true;
+      }
     }
   } else {
     setOverflowHidden(options);
@@ -126,6 +139,17 @@ export const clearAllBodyScrollLocks = (): void => {
       targetElement.ontouchmove = null;
     });
 
+    if (documentListenerAdded) {
+      document.removeEventListener(
+        'touchmove',
+        e => {
+          e.preventDefault();
+        },
+        { passive: false }
+      );
+      documentListenerAdded = false;
+    }
+
     allTargetElements = [];
 
     // Reset initial clientY
@@ -141,6 +165,17 @@ export const enableBodyScroll = (targetElement: any): void => {
   if (isIosDevice) {
     targetElement.ontouchstart = null;
     targetElement.ontouchmove = null;
+
+    if (documentListenerAdded) {
+      document.removeEventListener(
+        'touchmove',
+        e => {
+          e.preventDefault();
+        },
+        { passive: false }
+      );
+      documentListenerAdded = false;
+    }
 
     allTargetElements = allTargetElements.filter(element => element !== targetElement);
   } else if (firstTargetElement === targetElement) {
