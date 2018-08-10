@@ -114,7 +114,7 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
       };
 
       if (!documentListenerAdded) {
-        document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+        document.addEventListener('touchmove', preventDefault, { passive: false });
         documentListenerAdded = true;
       }
     }
@@ -134,7 +134,7 @@ export const clearAllBodyScrollLocks = (): void => {
     });
 
     if (documentListenerAdded) {
-      document.removeEventListener('touchmove', e => e.preventDefault(), { passive: false });
+      document.removeEventListener('touchmove', preventDefault, { passive: false });
       documentListenerAdded = false;
     }
 
@@ -155,7 +155,7 @@ export const enableBodyScroll = (targetElement: any): void => {
     targetElement.ontouchmove = null;
 
     if (documentListenerAdded) {
-      document.removeEventListener('touchmove', e => e.preventDefault(), { passive: false });
+      document.removeEventListener('touchmove', preventDefault, { passive: false });
       documentListenerAdded = false;
     }
 
