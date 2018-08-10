@@ -104,13 +104,13 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
           initialClientY = event.targetTouches[0].clientY;
         }
       };
-      targetElement.ontouchmove = (event: HandleScrollEvent) => {
+      targetElement.lockBodyScroll = (event: HandleScrollEvent) => {
         if (event.targetTouches.length === 1) {
           // detect single touch
           handleScroll(event, targetElement);
         }
       };
-      targetElement.addEventListener('touchmove', targetElement.ontouchmove, {
+      targetElement.addEventListener('touchmove', targetElement.lockBodyScroll, {
         passive: false,
       });
     }
@@ -126,10 +126,10 @@ export const clearAllBodyScrollLocks = (): void => {
     // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
     allTargetElements.forEach((targetElement: any) => {
       targetElement.ontouchstart = null;
-      targetElement.removeEventListener('touchmove', targetElement.ontouchmove, {
+      targetElement.removeEventListener('touchmove', targetElement.lockBodyScroll, {
         passive: false,
       });
-      targetElement.ontouchmove = null;
+      targetElement.lockBodyScroll = null;
     });
 
     allTargetElements = [];
@@ -146,10 +146,10 @@ export const clearAllBodyScrollLocks = (): void => {
 export const enableBodyScroll = (targetElement: any): void => {
   if (isIosDevice) {
     targetElement.ontouchstart = null;
-    targetElement.removeEventListener('touchmove', targetElement.ontouchmove, {
+    targetElement.removeEventListener('touchmove', targetElement.lockBodyScroll, {
       passive: false,
     });
-    targetElement.ontouchmove = null;
+    targetElement.lockBodyScroll = null;
 
     allTargetElements = allTargetElements.filter(element => element !== targetElement);
   } else if (firstTargetElement === targetElement) {
