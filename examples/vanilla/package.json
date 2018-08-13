@@ -5,7 +5,8 @@
   "license": "MIT",
   "dependencies": {},
   "scripts": {
-    "compile": "browserify ./main.js > bundle.js"
+    "compile": "browserify ./main.js > bundle.js",
+    "deployNow": "now --public && now alias"
   },
   "devDependencies": {
     "browserify": "^15.2.0"

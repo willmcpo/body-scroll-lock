@@ -98,13 +98,13 @@ class SomeComponent extends React.Component {
 ```
 
 ## Demo
-http://wp-os.s3-website-ap-southeast-2.amazonaws.com/body-scroll-lock-demo/index.html
+Check out the demo, powered by Now, @ https://bsl.now.sh
 
 ## Caveat
-On iOS mobile (as is visible in the above demo), if you scroll the body directly even when the scrolling is 
+~~On iOS mobile (as is visible in the above demo), if you scroll the body directly even when the scrolling is 
 locked (on iOS), the body scrolls - this is not what this package solves. It solves the typical case where a modal 
 overlays the screen, and scrolling within the modal never causes the body to scroll too (when the top or bottom 
-within the modal has been reached). 
+within the modal has been reached).~~
 
 ## Functions
 

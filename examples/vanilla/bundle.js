@@ -85,6 +85,7 @@
 
         var firstTargetElement = null;
         var allTargetElements = [];
+        var documentListenerAdded = false;
         var initialClientY = -1;
         var previousBodyOverflowSetting = void 0;
         var previousBodyPaddingRight = void 0;
@@ -161,6 +162,7 @@
             return preventDefault(event);
           }
 
+          event.stopPropagation();
           return true;
         };
 
@@ -183,6 +185,11 @@
                   handleScroll(event, targetElement);
                 }
               };
+
+              if (!documentListenerAdded) {
+                document.addEventListener('touchmove', preventDefault, { passive: false });
+                documentListenerAdded = true;
+              }
             }
           } else {
             setOverflowHidden(options);
@@ -198,6 +205,11 @@
               targetElement.ontouchstart = null;
               targetElement.ontouchmove = null;
             });
+
+            if (documentListenerAdded) {
+              document.removeEventListener('touchmove', preventDefault, { passive: false });
+              documentListenerAdded = false;
+            }
 
             allTargetElements = [];
 
@@ -218,6 +230,11 @@
             allTargetElements = allTargetElements.filter(function(element) {
               return element !== targetElement;
             });
+
+            if (documentListenerAdded && allTargetElements.length === 0) {
+              document.removeEventListener('touchmove', preventDefault, { passive: false });
+              documentListenerAdded = false;
+            }
           } else if (firstTargetElement === targetElement) {
             restoreOverflowSetting();
 
