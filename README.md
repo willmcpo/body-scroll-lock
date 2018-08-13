@@ -106,6 +106,9 @@ locked (on iOS), the body scrolls - this is not what this package solves. It sol
 overlays the screen, and scrolling within the modal never causes the body to scroll too (when the top or bottom 
 within the modal has been reached).~~
 
+Since the latest update (thanks @Neddz), this caveat is no longer valid. iOS mobile behaviour should be the same as 
+other devices (eg. Android Chrome). 
+
 ## Functions
 
 | Function | Arguments | Return | Description |
