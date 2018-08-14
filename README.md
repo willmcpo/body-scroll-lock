@@ -98,7 +98,7 @@ class SomeComponent extends React.Component {
 ```
 
 ## Demo
-Check out the demo, powered by Now, @ https://bsl.now.sh
+Check out the demo, powered by Now, @ https://bodyscrolllock.now.sh
 
 ## Caveat
 ~~On iOS mobile (as is visible in the above demo), if you scroll the body directly even when the scrolling is 
