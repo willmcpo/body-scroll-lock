@@ -31,9 +31,9 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
     
     $ npm install body-scroll-lock
     
-    or
     
-    via a `<script src='lib/bodyScrollLock.js />` tag (refer to the lib folder)
+    
+You can now also load via a `<script src='lib/bodyScrollLock.js />` tag (refer to the lib folder).
 
 
 ## Usage examples
