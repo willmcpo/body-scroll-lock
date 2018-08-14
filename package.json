@@ -49,7 +49,7 @@
     "uglify-js": "^3.4.7"
   },
   "scripts": {
-    "clean": "rimraf lib/",
+    "clean": "rimraf lib/ && mkdir -p ./lib",
     "release": "npm version",
     "postrelease": "yarn publish && git push --follow-tags",
     "build": "babel src/bodyScrollLock.js | uglifyjs --compress unused,dead_code --mangle reserved=['require','exports'] > lib/bodyScrollLock.js",
