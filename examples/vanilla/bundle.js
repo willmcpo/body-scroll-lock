@@ -58,188 +58,100 @@
     ],
     2: [
       function(require, module, exports) {
-        'use strict';
-
-        Object.defineProperty(exports, '__esModule', {
-          value: true,
-        });
-
-        function _toConsumableArray(arr) {
-          if (Array.isArray(arr)) {
-            for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
-              arr2[i] = arr[i];
-            }
-            return arr2;
-          } else {
-            return Array.from(arr);
+        !(function(o, e) {
+          if ('function' == typeof define && define.amd) define(['exports'], e);
+          else if ('undefined' != typeof exports) e(exports);
+          else {
+            var t = {};
+            e(t), (o.bodyScrollLock = t);
           }
-        }
-
-        var isIosDevice =
-          typeof window !== 'undefined' &&
-          window.navigator &&
-          window.navigator.platform &&
-          /iPad|iPhone|iPod|(iPad Simulator)|(iPhone Simulator)|(iPod Simulator)/.test(window.navigator.platform);
-        // Adopted and modified solution from Bohdan Didukh (2017)
-        // https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
-
-        var firstTargetElement = null;
-        var allTargetElements = [];
-        var documentListenerAdded = false;
-        var initialClientY = -1;
-        var previousBodyOverflowSetting = void 0;
-        var previousBodyPaddingRight = void 0;
-
-        var preventDefault = function preventDefault(rawEvent) {
-          var e = rawEvent || window.event;
-          if (e.preventDefault) e.preventDefault();
-
-          return false;
-        };
-
-        var setOverflowHidden = function setOverflowHidden(options) {
-          // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
-          // the responsiveness for some reason. Setting within a setTimeout fixes this.
-          setTimeout(function() {
-            // If previousBodyPaddingRight is already set, don't set it again.
-            if (previousBodyPaddingRight === undefined) {
-              var _reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
-              var scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
-
-              if (_reserveScrollBarGap && scrollBarGap > 0) {
-                previousBodyPaddingRight = document.body.style.paddingRight;
-                document.body.style.paddingRight = scrollBarGap + 'px';
-              }
-            }
-
-            // If previousBodyOverflowSetting is already set, don't set it again.
-            if (previousBodyOverflowSetting === undefined) {
-              previousBodyOverflowSetting = document.body.style.overflow;
-              document.body.style.overflow = 'hidden';
-            }
-          });
-        };
-
-        var restoreOverflowSetting = function restoreOverflowSetting() {
-          // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
-          // the responsiveness for some reason. Setting within a setTimeout fixes this.
-          setTimeout(function() {
-            if (previousBodyPaddingRight !== undefined) {
-              document.body.style.paddingRight = previousBodyPaddingRight;
-
-              // Restore previousBodyPaddingRight to undefined so setOverflowHidden knows it
-              // can be set again.
-              previousBodyPaddingRight = undefined;
-            }
-
-            if (previousBodyOverflowSetting !== undefined) {
-              document.body.style.overflow = previousBodyOverflowSetting;
-
-              // Restore previousBodyOverflowSetting to undefined
-              // so setOverflowHidden knows it can be set again.
-              previousBodyOverflowSetting = undefined;
-            }
-          });
-        };
-
-        // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
-        var isTargetElementTotallyScrolled = function isTargetElementTotallyScrolled(targetElement) {
-          return targetElement
-            ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight
-            : false;
-        };
-
-        var handleScroll = function handleScroll(event, targetElement) {
-          var clientY = event.targetTouches[0].clientY - initialClientY;
-
-          if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
-            // element is at the top of its scroll
-            return preventDefault(event);
-          }
-
-          if (isTargetElementTotallyScrolled(targetElement) && clientY < 0) {
-            // element is at the top of its scroll
-            return preventDefault(event);
-          }
-
-          event.stopPropagation();
-          return true;
-        };
-
-        var disableBodyScroll = (exports.disableBodyScroll = function disableBodyScroll(targetElement, options) {
-          if (isIosDevice) {
-            // targetElement must be provided, and disableBodyScroll must not have been
-            // called on this targetElement before.
-            if (targetElement && !allTargetElements.includes(targetElement)) {
-              allTargetElements = [].concat(_toConsumableArray(allTargetElements), [targetElement]);
-
-              targetElement.ontouchstart = function(event) {
-                if (event.targetTouches.length === 1) {
-                  // detect single touch
-                  initialClientY = event.targetTouches[0].clientY;
-                }
-              };
-              targetElement.ontouchmove = function(event) {
-                if (event.targetTouches.length === 1) {
-                  // detect single touch
-                  handleScroll(event, targetElement);
-                }
-              };
-
-              if (!documentListenerAdded) {
-                document.addEventListener('touchmove', preventDefault, { passive: false });
-                documentListenerAdded = true;
-              }
-            }
-          } else {
-            setOverflowHidden(options);
-
-            if (!firstTargetElement) firstTargetElement = targetElement;
-          }
-        });
-
-        var clearAllBodyScrollLocks = (exports.clearAllBodyScrollLocks = function clearAllBodyScrollLocks() {
-          if (isIosDevice) {
-            // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
-            allTargetElements.forEach(function(targetElement) {
-              targetElement.ontouchstart = null;
-              targetElement.ontouchmove = null;
+        })(this, function(exports) {
+          'use strict';
+          Object.defineProperty(exports, '__esModule', { value: !0 });
+          var n =
+              'undefined' != typeof window &&
+              window.navigator &&
+              window.navigator.platform &&
+              /iPad|iPhone|iPod|(iPad Simulator)|(iPhone Simulator)|(iPod Simulator)/.test(window.navigator.platform),
+            i = null,
+            l = [],
+            d = !1,
+            u = -1,
+            c = void 0,
+            a = void 0,
+            s = function(o) {
+              var e = o || window.event;
+              return e.preventDefault && e.preventDefault(), !1;
+            },
+            o = function() {
+              setTimeout(function() {
+                void 0 !== a && ((document.body.style.paddingRight = a), (a = void 0)),
+                  void 0 !== c && ((document.body.style.overflow = c), (c = void 0));
+              });
+            };
+          (exports.disableBodyScroll = function(r, o) {
+            var t;
+            n
+              ? r &&
+                !l.includes(r) &&
+                ((l = [].concat(
+                  (function(o) {
+                    if (Array.isArray(o)) {
+                      for (var e = 0, t = Array(o.length); e < o.length; e++) t[e] = o[e];
+                      return t;
+                    }
+                    return Array.from(o);
+                  })(l),
+                  [r]
+                )),
+                (r.ontouchstart = function(o) {
+                  1 === o.targetTouches.length && (u = o.targetTouches[0].clientY);
+                }),
+                (r.ontouchmove = function(o) {
+                  var e, t, n, i;
+                  1 === o.targetTouches.length &&
+                    ((t = r),
+                    (i = (e = o).targetTouches[0].clientY - u),
+                    t && 0 === t.scrollTop && 0 < i
+                      ? s(e)
+                      : (n = t) && n.scrollHeight - n.scrollTop <= n.clientHeight && i < 0
+                        ? s(e)
+                        : e.stopPropagation());
+                }),
+                d || (document.addEventListener('touchmove', s, { passive: !1 }), (d = !0)))
+              : ((t = o),
+                setTimeout(function() {
+                  if (void 0 === a) {
+                    var o = !!t && !0 === t.reserveScrollBarGap,
+                      e = window.innerWidth - document.documentElement.clientWidth;
+                    o &&
+                      0 < e &&
+                      ((a = document.body.style.paddingRight), (document.body.style.paddingRight = e + 'px'));
+                  }
+                  void 0 === c && ((c = document.body.style.overflow), (document.body.style.overflow = 'hidden'));
+                }),
+                i || (i = r));
+          }),
+            (exports.clearAllBodyScrollLocks = function() {
+              n
+                ? (l.forEach(function(o) {
+                    (o.ontouchstart = null), (o.ontouchmove = null);
+                  }),
+                  d && (document.removeEventListener('touchmove', s, { passive: !1 }), (d = !1)),
+                  (l = []),
+                  (u = -1))
+                : (o(), (i = null));
+            }),
+            (exports.enableBodyScroll = function(e) {
+              n
+                ? ((e.ontouchstart = null),
+                  (e.ontouchmove = null),
+                  (l = l.filter(function(o) {
+                    return o !== e;
+                  })),
+                  d && 0 === l.length && (document.removeEventListener('touchmove', s, { passive: !1 }), (d = !1)))
+                : i === e && (o(), (i = null));
             });
-
-            if (documentListenerAdded) {
-              document.removeEventListener('touchmove', preventDefault, { passive: false });
-              documentListenerAdded = false;
-            }
-
-            allTargetElements = [];
-
-            // Reset initial clientY
-            initialClientY = -1;
-          } else {
-            restoreOverflowSetting();
-
-            firstTargetElement = null;
-          }
-        });
-
-        var enableBodyScroll = (exports.enableBodyScroll = function enableBodyScroll(targetElement) {
-          if (isIosDevice) {
-            targetElement.ontouchstart = null;
-            targetElement.ontouchmove = null;
-
-            allTargetElements = allTargetElements.filter(function(element) {
-              return element !== targetElement;
-            });
-
-            if (documentListenerAdded && allTargetElements.length === 0) {
-              document.removeEventListener('touchmove', preventDefault, { passive: false });
-              documentListenerAdded = false;
-            }
-          } else if (firstTargetElement === targetElement) {
-            restoreOverflowSetting();
-
-            firstTargetElement = null;
-          }
         });
       },
       {},
