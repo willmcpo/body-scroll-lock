@@ -6,7 +6,7 @@ Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/
 *Features:*
 
 - disables body scroll WITHOUT disabling scroll of a target element
-- works on iOS mobile/tablet (!)
+- works on iOS mobile/tablet (!!)
 - works on Android
 - works on Safari desktop
 - works on Chrome/Firefox 
