@@ -1,6 +1,6 @@
 {
   "name": "body-scroll-lock",
-  "version": "2.4.6-beta.1",
+  "version": "2.5.0",
   "description": "Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element (eg. modal/lightbox/flyouts/nav-menus)",
   "main": "lib/bodyScrollLock.js",
   "author": "Will Po",
@@ -45,13 +45,14 @@
     "jest": "^22.1.2",
     "lint-staged": "^6.0.1",
     "prettier": "^1.10.2",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "uglify-js": "^3.4.7"
   },
   "scripts": {
     "clean": "rimraf lib/",
     "release": "npm version",
     "postrelease": "yarn publish && git push --follow-tags",
-    "build": "babel src/ -d lib/",
+    "build": "babel src/bodyScrollLock.js | uglifyjs --compress unused,dead_code --mangle reserved=['require','exports'] > lib/bodyScrollLock.js",
     "lint": "eslint ./src",
     "prerelease": "yarn flow && yarn lint && yarn run clean && yarn build",
     "flow": "flow",
