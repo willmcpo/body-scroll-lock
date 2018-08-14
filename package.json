@@ -22,10 +22,12 @@
     "react",
     "vanilla-js",
     "angular",
+    "vue",
     "ios",
     "mobile",
     "desktop",
-    "tablet"
+    "tablet",
+    "bsl"
   ],
   "dependencies": {},
   "devDependencies": {

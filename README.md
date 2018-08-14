@@ -10,7 +10,7 @@ Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/
 - works on Android
 - works on Safari desktop
 - works on Chrome/Firefox 
-- works with vanilla JS and frameworks such as React / Angular
+- works with vanilla JS and frameworks such as React / Angular / VueJS
 - supports nested target elements (eg. a modal that appears on top of a flyout)
 - can reserve scrollbar width
 - `-webkit-overflow-scrolling: touch` still works
