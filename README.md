@@ -1,12 +1,12 @@
 <p align="left"> <img width="675" src="https://raw.githubusercontent.com/willmcpo/body-scroll-lock/master/images/logo.png" alt="Body scroll lock...just works with everything ;-)" /> </p>
 
-## Why body-scroll-lock ?
+## Why BSL?
 Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element (eg. modal/lightbox/flyouts/nav-menus).
 
 *Features:*
 
 - disables body scroll WITHOUT disabling scroll of a target element
-- works on iOS mobile/tablet
+- works on iOS mobile/tablet (!)
 - works on Android
 - works on Safari desktop
 - works on Chrome/Firefox 
@@ -26,9 +26,14 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
 ## Install
 
     $ yarn add body-scroll-lock
+    
     or
+    
     $ npm install body-scroll-lock
-
+    
+    or
+    
+    via a `<script src='lib/bodyScrollLock.js />` tag (refer to the lib folder)
 
 
 ## Usage examples
