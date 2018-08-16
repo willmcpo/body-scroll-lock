@@ -23,6 +23,10 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
 - the `position: fixed` approach causes the body scroll to reset
 - some approaches break inertia/momentum/rubber-band scrolling on iOS
 
+*Package Size:*
+
+- LIGHT - package is only 1.98KB and 903B when gzipped (see [here](https://bundlephobia.com/result?p=body-scroll-lock@2.5.5))!
+
 ## Install
 
     $ yarn add body-scroll-lock
