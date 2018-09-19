@@ -20,8 +20,30 @@ let initialClientY: number = -1;
 let previousBodyOverflowSetting;
 let previousBodyPaddingRight;
 
+const isElementIgnored = (el: any): boolean => {
+  if (!el) {
+    return false;
+  }
+
+  // walk up the DOM
+  while (el && el !== document.body) {
+    if (el.getAttribute('body-scroll-lock-ignore') !== null) {
+      return true;
+    }
+
+    el = el.parentNode;
+  }
+
+  return false;
+};
+
 const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   const e = rawEvent || window.event;
+
+  if (isElementIgnored(e.target)) {
+    return true;
+  }
+
   if (e.preventDefault) e.preventDefault();
 
   return false;
@@ -78,6 +100,10 @@ const isTargetElementTotallyScrolled = (targetElement: any): boolean =>
 
 const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => {
   const clientY = event.targetTouches[0].clientY - initialClientY;
+
+  if (isElementIgnored(event.target)) {
+    return false;
+  }
 
   if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
     // element is at the top of its scroll
