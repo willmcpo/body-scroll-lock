@@ -1,13 +1,8 @@
-// @flow
+// Older browsers don't support event options, feature detect it.
+let hasPassiveEvents = false;
 // Adopted and modified solution from Bohdan Didukh (2017)
 // https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
 
-export interface BodyScrollOptions {
-  reserveScrollBarGap?: boolean;
-}
-
-// Older browsers don't support event options, feature detect it.
-let hasPassiveEvents = false;
 const passiveTestOptions = {
   get passive() {
     hasPassiveEvents = true;
@@ -21,23 +16,22 @@ const isIosDevice =
   window.navigator &&
   window.navigator.platform &&
   /iPad|iPhone|iPod|(iPad Simulator)|(iPhone Simulator)|(iPod Simulator)/.test(window.navigator.platform);
-type HandleScrollEvent = TouchEvent;
 
-let firstTargetElement: HTMLElement | null = null;
-let allTargetElements: Array<HTMLElement> = [];
-let documentListenerAdded: boolean = false;
-let initialClientY: number = -1;
+let firstTargetElement = null;
+let allTargetElements = [];
+let documentListenerAdded = false;
+let initialClientY = -1;
 let previousBodyOverflowSetting;
 let previousBodyPaddingRight;
 
-const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
+const preventDefault = rawEvent => {
   const e = rawEvent || window.event;
   if (e.preventDefault) e.preventDefault();
 
   return false;
 };
 
-const setOverflowHidden = (options?: BodyScrollOptions) => {
+const setOverflowHidden = options => {
   // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
   // the responsiveness for some reason. Setting within a setTimeout fixes this.
   setTimeout(() => {
@@ -83,10 +77,10 @@ const restoreOverflowSetting = () => {
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
-const isTargetElementTotallyScrolled = (targetElement: any): boolean =>
+const isTargetElementTotallyScrolled = targetElement =>
   targetElement ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight : false;
 
-const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => {
+const handleScroll = (event, targetElement) => {
   const clientY = event.targetTouches[0].clientY - initialClientY;
 
   if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
@@ -103,20 +97,20 @@ const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => 
   return true;
 };
 
-export const disableBodyScroll = (targetElement: any, options?: BodyScrollOptions): void => {
+export const disableBodyScroll = (targetElement, options) => {
   if (isIosDevice) {
     // targetElement must be provided, and disableBodyScroll must not have been
     // called on this targetElement before.
     if (targetElement && !allTargetElements.includes(targetElement)) {
       allTargetElements = [...allTargetElements, targetElement];
 
-      targetElement.ontouchstart = (event: HandleScrollEvent) => {
+      targetElement.ontouchstart = event => {
         if (event.targetTouches.length === 1) {
           // detect single touch
           initialClientY = event.targetTouches[0].clientY;
         }
       };
-      targetElement.ontouchmove = (event: HandleScrollEvent) => {
+      targetElement.ontouchmove = event => {
         if (event.targetTouches.length === 1) {
           // detect single touch
           handleScroll(event, targetElement);
@@ -135,10 +129,10 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
   }
 };
 
-export const clearAllBodyScrollLocks = (): void => {
+export const clearAllBodyScrollLocks = () => {
   if (isIosDevice) {
     // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
-    allTargetElements.forEach((targetElement: any) => {
+    allTargetElements.forEach(targetElement => {
       targetElement.ontouchstart = null;
       targetElement.ontouchmove = null;
     });
@@ -159,7 +153,7 @@ export const clearAllBodyScrollLocks = (): void => {
   }
 };
 
-export const enableBodyScroll = (targetElement: any): void => {
+export const enableBodyScroll = targetElement => {
   if (isIosDevice) {
     targetElement.ontouchstart = null;
     targetElement.ontouchmove = null;
