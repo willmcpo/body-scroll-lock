@@ -1,21 +1,10 @@
-// Older browsers don't support event options, feature detect it.
-let hasPassiveEvents = false;
-// Adopted and modified solution from Bohdan Didukh (2017)
-// https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
-
-const passiveTestOptions = {
-  get passive() {
-    hasPassiveEvents = true;
-  },
-};
-window.addEventListener('testPassive', null, passiveTestOptions);
-window.removeEventListener('testPassive', null, passiveTestOptions);
-
 const isIosDevice =
   typeof window !== 'undefined' &&
   window.navigator &&
   window.navigator.platform &&
   /iPad|iPhone|iPod|(iPad Simulator)|(iPhone Simulator)|(iPod Simulator)/.test(window.navigator.platform);
+// Adopted and modified solution from Bohdan Didukh (2017)
+// https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
 
 let firstTargetElement = null;
 let allTargetElements = [];
@@ -118,7 +107,7 @@ export const disableBodyScroll = (targetElement, options) => {
       };
 
       if (!documentListenerAdded) {
-        document.addEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
+        document.addEventListener('touchmove', preventDefault, { passive: false });
         documentListenerAdded = true;
       }
     }
@@ -138,7 +127,7 @@ export const clearAllBodyScrollLocks = () => {
     });
 
     if (documentListenerAdded) {
-      document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
+      document.removeEventListener('touchmove', preventDefault, { passive: false });
       documentListenerAdded = false;
     }
 
@@ -161,7 +150,7 @@ export const enableBodyScroll = targetElement => {
     allTargetElements = allTargetElements.filter(element => element !== targetElement);
 
     if (documentListenerAdded && allTargetElements.length === 0) {
-      document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
+      document.removeEventListener('touchmove', preventDefault, { passive: false });
       documentListenerAdded = false;
     }
   } else if (firstTargetElement === targetElement) {
