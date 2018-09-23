@@ -6,6 +6,16 @@ export interface BodyScrollOptions {
   reserveScrollBarGap?: boolean;
 }
 
+// Older browsers don't support event options, feature detect it.
+let hasPassiveEvents = false;
+const passiveTestOptions = {
+  get passive() {
+    hasPassiveEvents = true;
+  },
+};
+window.addEventListener('testPassive', null, passiveTestOptions);
+window.removeEventListener('testPassive', null, passiveTestOptions);
+
 const isIosDevice =
   typeof window !== 'undefined' &&
   window.navigator &&
@@ -114,7 +124,7 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
       };
 
       if (!documentListenerAdded) {
-        document.addEventListener('touchmove', preventDefault, { passive: false });
+        document.addEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
         documentListenerAdded = true;
       }
     }
@@ -134,7 +144,7 @@ export const clearAllBodyScrollLocks = (): void => {
     });
 
     if (documentListenerAdded) {
-      document.removeEventListener('touchmove', preventDefault, { passive: false });
+      document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
       documentListenerAdded = false;
     }
 
@@ -157,7 +167,7 @@ export const enableBodyScroll = (targetElement: any): void => {
     allTargetElements = allTargetElements.filter(element => element !== targetElement);
 
     if (documentListenerAdded && allTargetElements.length === 0) {
-      document.removeEventListener('touchmove', preventDefault, { passive: false });
+      document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
       documentListenerAdded = false;
     }
   } else if (firstTargetElement === targetElement) {
