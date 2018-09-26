@@ -4,6 +4,12 @@
 
 export interface BodyScrollOptions {
   reserveScrollBarGap?: boolean;
+  allowTouchMove?: (el: any) => boolean;
+}
+
+interface Lock {
+  targetElement: HTMLElement;
+  options: BodyScrollOptions;
 }
 
 const isIosDevice =
@@ -14,33 +20,26 @@ const isIosDevice =
 type HandleScrollEvent = TouchEvent;
 
 let firstTargetElement: HTMLElement | null = null;
-let allTargetElements: Array<HTMLElement> = [];
+let locks: Array<Lock> = [];
 let documentListenerAdded: boolean = false;
 let initialClientY: number = -1;
 let previousBodyOverflowSetting;
 let previousBodyPaddingRight;
 
-const isElementIgnored = (el: any): boolean => {
-  if (!el) {
-    return false;
-  }
-
-  // walk up the DOM
-  while (el && el !== document.body) {
-    if (el.getAttribute('body-scroll-lock-ignore') !== null) {
+// returns true if `el` should be allowed to receive touchmove events
+const allowTouchMove = (el: HTMLElement): boolean =>
+  locks.some(lock => {
+    if (lock.options.allowTouchMove && lock.options.allowTouchMove(el)) {
       return true;
     }
 
-    el = el.parentNode;
-  }
-
-  return false;
-};
+    return false;
+  });
 
 const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   const e = rawEvent || window.event;
 
-  if (isElementIgnored(e.target)) {
+  if (allowTouchMove(e.target)) {
     return true;
   }
 
@@ -101,7 +100,7 @@ const isTargetElementTotallyScrolled = (targetElement: any): boolean =>
 const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => {
   const clientY = event.targetTouches[0].clientY - initialClientY;
 
-  if (isElementIgnored(event.target)) {
+  if (allowTouchMove(event.target)) {
     return false;
   }
 
@@ -123,8 +122,13 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
   if (isIosDevice) {
     // targetElement must be provided, and disableBodyScroll must not have been
     // called on this targetElement before.
-    if (targetElement && !allTargetElements.includes(targetElement)) {
-      allTargetElements = [...allTargetElements, targetElement];
+    if (targetElement && !locks.some(lock => lock.targetElement === targetElement)) {
+      const lock = {
+        targetElement,
+        options: options || {},
+      };
+
+      locks = [...locks, lock];
 
       targetElement.ontouchstart = (event: HandleScrollEvent) => {
         if (event.targetTouches.length === 1) {
@@ -153,10 +157,10 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
 
 export const clearAllBodyScrollLocks = (): void => {
   if (isIosDevice) {
-    // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
-    allTargetElements.forEach((targetElement: any) => {
-      targetElement.ontouchstart = null;
-      targetElement.ontouchmove = null;
+    // Clear all locks ontouchstart/ontouchmove handlers, and the references
+    locks.forEach((lock: Lock) => {
+      lock.targetElement.ontouchstart = null;
+      lock.targetElement.ontouchmove = null;
     });
 
     if (documentListenerAdded) {
@@ -164,7 +168,7 @@ export const clearAllBodyScrollLocks = (): void => {
       documentListenerAdded = false;
     }
 
-    allTargetElements = [];
+    locks = [];
 
     // Reset initial clientY
     initialClientY = -1;
@@ -180,9 +184,9 @@ export const enableBodyScroll = (targetElement: any): void => {
     targetElement.ontouchstart = null;
     targetElement.ontouchmove = null;
 
-    allTargetElements = allTargetElements.filter(element => element !== targetElement);
+    locks = locks.filter(lock => lock.targetElement !== targetElement);
 
-    if (documentListenerAdded && allTargetElements.length === 0) {
+    if (documentListenerAdded && locks.length === 0) {
       document.removeEventListener('touchmove', preventDefault, { passive: false });
       documentListenerAdded = false;
     }
