@@ -11,6 +11,7 @@ let hasPassiveEvents = false;
 const passiveTestOptions = {
   get passive() {
     hasPassiveEvents = true;
+    return undefined;
   },
 };
 window.addEventListener('testPassive', null, passiveTestOptions);
