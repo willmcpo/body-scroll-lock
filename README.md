@@ -25,7 +25,7 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
 
 *Package Size:*
 
-- LIGHT - package is only 1.8KB and 840B when gzipped (see [here](https://bundlephobia.com/result?p=body-scroll-lock))!
+- LIGHT - package is only 2.2KB and 976B when gzipped (see [here](https://bundlephobia.com/result?p=body-scroll-lock))!
 
 ## Install
 
