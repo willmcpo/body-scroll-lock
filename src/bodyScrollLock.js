@@ -8,14 +8,16 @@ export interface BodyScrollOptions {
 
 // Older browsers don't support event options, feature detect it.
 let hasPassiveEvents = false;
-const passiveTestOptions = {
-  get passive() {
-    hasPassiveEvents = true;
-    return undefined;
-  },
-};
-window.addEventListener('testPassive', null, passiveTestOptions);
-window.removeEventListener('testPassive', null, passiveTestOptions);
+if (typeof window !== 'undefined') {
+  const passiveTestOptions = {
+    get passive() {
+      hasPassiveEvents = true;
+      return undefined;
+    },
+  };
+  window.addEventListener('testPassive', null, passiveTestOptions);
+  window.removeEventListener('testPassive', null, passiveTestOptions);
+}
 
 const isIosDevice =
   typeof window !== 'undefined' &&
