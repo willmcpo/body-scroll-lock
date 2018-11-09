@@ -26,7 +26,6 @@ const isIosDevice =
   /iPad|iPhone|iPod|(iPad Simulator)|(iPhone Simulator)|(iPod Simulator)/.test(window.navigator.platform);
 type HandleScrollEvent = TouchEvent;
 
-let firstTargetElement: HTMLElement | null = null;
 let allTargetElements: Array<HTMLElement> = [];
 let documentListenerAdded: boolean = false;
 let initialClientY: number = -1;
@@ -137,8 +136,7 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
     }
   } else {
     setOverflowHidden(options);
-
-    if (!firstTargetElement) firstTargetElement = targetElement;
+    allTargetElements.push(targetElement);
   }
 };
 
@@ -161,8 +159,7 @@ export const clearAllBodyScrollLocks = (): void => {
     initialClientY = -1;
   } else {
     restoreOverflowSetting();
-
-    firstTargetElement = null;
+    allTargetElements = [];
   }
 };
 
@@ -177,9 +174,11 @@ export const enableBodyScroll = (targetElement: any): void => {
       document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
       documentListenerAdded = false;
     }
-  } else if (firstTargetElement === targetElement) {
+  } else if (allTargetElements.length === 1 && allTargetElements[0] === targetElement) {
     restoreOverflowSetting();
 
-    firstTargetElement = null;
+    allTargetElements = [];
+  } else {
+    allTargetElements = allTargetElements.filter(element => element === targetElement);
   }
 };
