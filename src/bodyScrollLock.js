@@ -23,7 +23,7 @@ const isIosDevice =
   typeof window !== 'undefined' &&
   window.navigator &&
   window.navigator.platform &&
-  /iPad|iPhone|iPod|(iPad Simulator)|(iPhone Simulator)|(iPod Simulator)/.test(window.navigator.platform);
+  /iP(ad|hone|od)/.test(window.navigator.platform);
 type HandleScrollEvent = TouchEvent;
 
 let firstTargetElement: HTMLElement | null = null;
