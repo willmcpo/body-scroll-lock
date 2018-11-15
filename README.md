@@ -180,14 +180,14 @@ children of it to receive touch moves still; or in other words, you want child e
 ignore the fact that a parent element has the body scroll lock set (and hence, not be affected at all by this setting).
 See below for 2 use cases:
 
-#####Simple 
+##### Simple 
 ```javascript
   disableBodyScroll(container, {
     allowTouchMove: el => (el.tagName === 'TEXTAREA')
   });
 ```
 
-#####More Complex
+##### More Complex
 Javascript:
 ```javascript
   disableBodyScroll(container, {
