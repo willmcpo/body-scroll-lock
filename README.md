@@ -37,7 +37,7 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
     
     
     
-You can now also load via a `<script src='lib/bodyScrollLock.js />` tag (refer to the lib folder).
+You can now also load via a `<script src='lib/bodyScrollLock.js></script>` tag (refer to the lib folder).
 
 
 ## Usage examples
