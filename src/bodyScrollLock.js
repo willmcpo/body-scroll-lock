@@ -8,7 +8,7 @@ export interface BodyScrollOptions {
 }
 
 interface Lock {
-  targetElement: HTMLElement;
+  targetElement: any;
   options: BodyScrollOptions;
 }
 
@@ -27,7 +27,7 @@ let previousBodyOverflowSetting;
 let previousBodyPaddingRight;
 
 // returns true if `el` should be allowed to receive touchmove events
-const allowTouchMove = (el: HTMLElement): boolean =>
+const allowTouchMove = (el: EventTarget): boolean =>
   locks.some(lock => {
     if (lock.options.allowTouchMove && lock.options.allowTouchMove(el)) {
       return true;
