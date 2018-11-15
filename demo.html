@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>Body Scroll Lock</title>
+    <style>
+      body {
+        text-align: center;
+        margin: 0;
+        padding: 0;
+      }
+      #buttons {
+        position: fixed;
+        z-index: 2;
+      }
+      button {
+        height: 50px;
+        width: 100px;
+      }
+      #overlay {
+        position: fixed;
+        top: 10%;
+        left: 10%;
+        right: 10%;
+        bottom: 10%;
+        z-index: 1;
+        overflow-y: scroll;
+        background: white;
+      }
+      .content > div {
+        height: 20%;
+        margin: 0 0 20px;
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+      #nested-scroll {
+        position: relative;
+        overflow-y: scroll;
+        background-color: white;
+      }
+      h3 {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="buttons">
+      <button id="disable">Disable</button> <button id="enable">Enable</button>
+    </div>
+    <h3>Body</h3>
+    <div class="content">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div id="overlay">
+      <h3>Overlay</h3>
+      <div class="content">
+        <div></div>
+        <div id="nested-scroll">
+          <h3>Nested Scroll</h3>
+          <div class="content">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      module = {};
+    </script>
+    <script src="bodyScrollLock.js"></script>
+    <script type="text/javascript">
+      document.getElementById('disable').addEventListener('click', function() {
+        module.exports.disableBodyScroll(document.getElementById('overlay'));
+      });
+      document.getElementById('enable').addEventListener('click', function() {
+        module.exports.enableBodyScroll(document.getElementById('overlay'));
+      });
+    </script>
+  </body>
+</html>
