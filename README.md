@@ -205,7 +205,7 @@ Javascript:
 Html:
 ```html
   <div id="container">
-    <div id="scrolling-map" body-scroll-lock-disable>
+    <div id="scrolling-map" body-scroll-lock-ignore>
       ...
     </div>
   </div>
