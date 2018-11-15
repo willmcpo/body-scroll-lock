@@ -142,6 +142,12 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
   if (isIosDevice) {
     // targetElement must be provided, and disableBodyScroll must not have been
     // called on this targetElement before.
+    if (!targetElement) {
+      console.warn(
+        'targetElement must be provided, and disableBodyScroll must not have been called on this targetElement before.'
+      );
+    }
+
     if (targetElement && !locks.some(lock => lock.targetElement === targetElement)) {
       const lock = {
         targetElement,
@@ -201,6 +207,10 @@ export const clearAllBodyScrollLocks = (): void => {
 
 export const enableBodyScroll = (targetElement: any): void => {
   if (isIosDevice) {
+    if (!targetElement) {
+      console.warn('targetElement must be provided when calling enableBodyScroll.');
+    }
+
     targetElement.ontouchstart = null;
     targetElement.ontouchmove = null;
 
