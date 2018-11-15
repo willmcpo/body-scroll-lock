@@ -90,10 +90,11 @@
           }
 
           // Older browsers don't support event options, feature detect it.
-          var hasPassiveEvents = false;
+
           // Adopted and modified solution from Bohdan Didukh (2017)
           // https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
 
+          var hasPassiveEvents = false;
           if (typeof window !== 'undefined') {
             var passiveTestOptions = {
               get passive() {
@@ -109,17 +110,36 @@
             typeof window !== 'undefined' &&
             window.navigator &&
             window.navigator.platform &&
-            /iPad|iPhone|iPod|(iPad Simulator)|(iPhone Simulator)|(iPod Simulator)/.test(window.navigator.platform);
+            /iP(ad|hone|od)/.test(window.navigator.platform);
 
           var firstTargetElement = null;
-          var allTargetElements = [];
+          var locks = [];
           var documentListenerAdded = false;
           var initialClientY = -1;
           var previousBodyOverflowSetting = void 0;
           var previousBodyPaddingRight = void 0;
 
+          // returns true if `el` should be allowed to receive touchmove events
+          var allowTouchMove = function allowTouchMove(el) {
+            return locks.some(function(lock) {
+              if (lock.options.allowTouchMove && lock.options.allowTouchMove(el)) {
+                return true;
+              }
+
+              return false;
+            });
+          };
+
           var preventDefault = function preventDefault(rawEvent) {
             var e = rawEvent || window.event;
+
+            // For the case whereby consumers adds a touchmove event listener to document.
+            // Recall that we do document.addEventListener('touchmove', preventDefault, { passive: false })
+            // in disableBodyScroll - so if we provide this opportunity to allowTouchMove, then
+            // the touchmove event on document will break.
+            if (allowTouchMove(e.target)) {
+              return true;
+            }
 
             // Do not prevent if the event has more than one touch (usually meaning this is a multi touch gesture like pinch to zoom)
             if (e.touches.length > 1) return true;
@@ -184,6 +204,10 @@
           var handleScroll = function handleScroll(event, targetElement) {
             var clientY = event.targetTouches[0].clientY - initialClientY;
 
+            if (allowTouchMove(event.target)) {
+              return false;
+            }
+
             if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
               // element is at the top of its scroll
               return preventDefault(event);
@@ -202,8 +226,25 @@
             if (isIosDevice) {
               // targetElement must be provided, and disableBodyScroll must not have been
               // called on this targetElement before.
-              if (targetElement && !allTargetElements.includes(targetElement)) {
-                allTargetElements = [].concat(_toConsumableArray(allTargetElements), [targetElement]);
+              if (!targetElement) {
+                console.warn(
+                  'targetElement must be provided, and disableBodyScroll must not have been called on this targetElement before.'
+                );
+                return;
+              }
+
+              if (
+                targetElement &&
+                !locks.some(function(lock) {
+                  return lock.targetElement === targetElement;
+                })
+              ) {
+                var lock = {
+                  targetElement: targetElement,
+                  options: options || {},
+                };
+
+                locks = [].concat(_toConsumableArray(locks), [lock]);
 
                 targetElement.ontouchstart = function(event) {
                   if (event.targetTouches.length === 1) {
@@ -236,10 +277,10 @@
 
           var clearAllBodyScrollLocks = (exports.clearAllBodyScrollLocks = function clearAllBodyScrollLocks() {
             if (isIosDevice) {
-              // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
-              allTargetElements.forEach(function(targetElement) {
-                targetElement.ontouchstart = null;
-                targetElement.ontouchmove = null;
+              // Clear all locks ontouchstart/ontouchmove handlers, and the references
+              locks.forEach(function(lock) {
+                lock.targetElement.ontouchstart = null;
+                lock.targetElement.ontouchmove = null;
               });
 
               if (documentListenerAdded) {
@@ -251,7 +292,7 @@
                 documentListenerAdded = false;
               }
 
-              allTargetElements = [];
+              locks = [];
 
               // Reset initial clientY
               initialClientY = -1;
@@ -264,19 +305,25 @@
 
           var enableBodyScroll = (exports.enableBodyScroll = function enableBodyScroll(targetElement) {
             if (isIosDevice) {
+              if (!targetElement) {
+                console.warn('targetElement must be provided when calling enableBodyScroll.');
+                return;
+              }
+
               targetElement.ontouchstart = null;
               targetElement.ontouchmove = null;
 
-              allTargetElements = allTargetElements.filter(function(element) {
-                return element !== targetElement;
+              locks = locks.filter(function(lock) {
+                return lock.targetElement !== targetElement;
               });
 
-              if (documentListenerAdded && allTargetElements.length === 0) {
+              if (documentListenerAdded && locks.length === 0) {
                 document.removeEventListener(
                   'touchmove',
                   preventDefault,
                   hasPassiveEvents ? { passive: false } : undefined
                 );
+
                 documentListenerAdded = false;
               }
             } else if (firstTargetElement === targetElement) {
