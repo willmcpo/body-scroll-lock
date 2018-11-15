@@ -39,6 +39,10 @@ const allowTouchMove = (el: HTMLElement): boolean =>
 const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   const e = rawEvent || window.event;
 
+  // For the case whereby consumers adds a touchmove event listener to document.
+  // Recall that we do document.addEventListener('touchmove', preventDefault, { passive: false })
+  // in disableBodyScroll - so if we provide this opportunity to allowTouchMove, then
+  // the touchmove event on document will break.
   if (allowTouchMove(e.target)) {
     return true;
   }
