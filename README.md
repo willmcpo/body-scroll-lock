@@ -111,7 +111,7 @@ class SomeComponent extends React.Component {
 In the html:
 ```html
 <head>
-  <script src="some-path-where-you-dump-the-javascript-libraries/lib/bodyScrollLock.js" />
+  <script src="some-path-where-you-dump-the-javascript-libraries/lib/bodyScrollLock.js"></script>
 </head>
 ```
 
