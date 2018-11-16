@@ -49,7 +49,7 @@ const bodyScrollLock = require('body-scroll-lock');
 const disableBodyScroll = bodyScrollLock.disableBodyScroll;
 const enableBodyScroll = bodyScrollLock.enableBodyScroll;
   
-// 2. Get a target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav). 
+// 2. Get an optional target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav). 
 const targetElement = document.querySelector("#someElementId");
   
   
@@ -71,7 +71,7 @@ class SomeComponent extends React.Component {
   targetElement = null;
   
   componentDidMount() {
-    // 2. Get a target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav). 
+    // 2. Get an optional target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav). 
     this.targetElement = document.querySelector('#targetElementId');
   }
   
@@ -118,7 +118,7 @@ In the html:
 Then in the javascript:
 
 ```javascript
-// 1. Get a target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav). 
+// 1. Get an optional target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav). 
 const targetElement = document.querySelector("#someElementId");
 
 // 2. ...in some event handler after showing the target element...disable body scroll
@@ -149,8 +149,8 @@ other devices (eg. Android Chrome).
 
 | Function | Arguments | Return | Description |
 | :--- | :--- | :---: | :--- |
-| `disableBodyScroll` | `targetElement: HTMLElement` | `void` | Disables body scroll while enabling scroll on target element |
-| `enableBodyScroll` | `targetElement: HTMLElement`<br/>`options: BodyScrollOptions` | `void` | Enables body scroll and removing listeners on target element |
+| `disableBodyScroll` | `targetElement?: HTMLElement` | `void` | Disables body scroll while enabling scroll on target element |
+| `enableBodyScroll` | `targetElement?: HTMLElement`<br/>`options: BodyScrollOptions` | `void` | Enables body scroll and removing listeners on target element |
 | `clearAllBodyScrollLocks` | `null` | `void` | Clears all scroll locks |
 
 ## Options
@@ -180,14 +180,14 @@ children of it to receive touch moves still; or in other words, you want child e
 ignore the fact that a parent element has the body scroll lock set (and hence, not be affected at all by this setting).
 See below for 2 use cases:
 
-#####Simple 
+##### Simple 
 ```javascript
   disableBodyScroll(container, {
     allowTouchMove: el => (el.tagName === 'TEXTAREA')
   });
 ```
 
-#####More Complex
+##### More Complex
 Javascript:
 ```javascript
   disableBodyScroll(container, {
@@ -213,4 +213,5 @@ Html:
 
 ## References
 https://medium.com/jsdownunder/locking-body-scroll-for-all-devices-22def9615177
+
 https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi

@@ -140,15 +140,6 @@ const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => 
 
 export const disableBodyScroll = (targetElement: any, options?: BodyScrollOptions): void => {
   if (isIosDevice) {
-    // targetElement must be provided, and disableBodyScroll must not have been
-    // called on this targetElement before.
-    if (!targetElement) {
-      console.warn(
-        'targetElement must be provided, and disableBodyScroll must not have been called on this targetElement before.'
-      );
-      return;
-    }
-
     if (targetElement && !locks.some(lock => lock.targetElement === targetElement)) {
       const lock = {
         targetElement,
@@ -169,11 +160,10 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
           handleScroll(event, targetElement);
         }
       };
-
-      if (!documentListenerAdded) {
-        document.addEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
-        documentListenerAdded = true;
-      }
+    }
+    if (!documentListenerAdded) {
+      document.addEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
+      documentListenerAdded = true;
     }
   } else {
     setOverflowHidden(options);
@@ -208,22 +198,19 @@ export const clearAllBodyScrollLocks = (): void => {
 
 export const enableBodyScroll = (targetElement: any): void => {
   if (isIosDevice) {
-    if (!targetElement) {
-      console.warn('targetElement must be provided when calling enableBodyScroll.');
-      return;
+    if (targetElement) {
+      targetElement.ontouchstart = null;
+      targetElement.ontouchmove = null;
+
+      locks = locks.filter(lock => lock.targetElement !== targetElement);
     }
-
-    targetElement.ontouchstart = null;
-    targetElement.ontouchmove = null;
-
-    locks = locks.filter(lock => lock.targetElement !== targetElement);
 
     if (documentListenerAdded && locks.length === 0) {
       document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
 
       documentListenerAdded = false;
     }
-  } else if (firstTargetElement === targetElement) {
+  } else if (!targetElement || firstTargetElement === targetElement) {
     restoreOverflowSetting();
 
     firstTargetElement = null;
