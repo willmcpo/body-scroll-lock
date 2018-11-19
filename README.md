@@ -201,19 +201,6 @@ bodyScrollLock.enableBodyScroll(targetElement);
 bodyScrollLock.clearAllBodyScrollLocks();
 ```
 
-### Some Notes on CSS
-Your modal/flyout/layout/nav will need to have an explicit height and either have position fixed or absolute. If it fills the viewport, you need to explicitly give
-
-```css
-.modal {
-/* either position: fixed or absolute */
-/* height: 100vh; */
-top: 0;
-left: 0;
-bottom: 0;
-}
-```
-
 ## Demo
 Check out the demo, powered by Now, @ https://bodyscrolllock.now.sh
 
