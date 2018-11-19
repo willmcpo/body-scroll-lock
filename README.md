@@ -37,7 +37,7 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
     
     
     
-You can now also load via a `<script src='lib/bodyScrollLock.js />` tag (refer to the lib folder).
+You can now also load via a `<script src='lib/bodyScrollLock.js></script>` tag (refer to the lib folder).
 
 
 ## Usage examples
@@ -180,7 +180,7 @@ class SomeOtherComponent extends React.Component {
 In the html:
 ```html
 <head>
-  <script src="some-path-where-you-dump-the-javascript-libraries/lib/bodyScrollLock.js" />
+  <script src="some-path-where-you-dump-the-javascript-libraries/lib/bodyScrollLock.js"></script>
 </head>
 ```
 
@@ -239,6 +239,46 @@ const options: BodyScrollOptions = {
 
 enableBodyScroll(targetElement, options);
 ```
+
+### allowTouchMove
+**optional, default:** undefined
+
+There are cases where you have called `disableBodyScroll` on an element, but you still want some or all
+children of it to receive touch moves still; or in other words, you want child elements to
+ignore the fact that a parent element has the body scroll lock set (and hence, not be affected at all by this setting).
+See below for 2 use cases:
+
+##### Simple 
+```javascript
+  disableBodyScroll(container, {
+    allowTouchMove: el => (el.tagName === 'TEXTAREA')
+  });
+```
+
+##### More Complex
+Javascript:
+```javascript
+  disableBodyScroll(container, {
+    allowTouchMove: el => {
+      while (el && el !== document.body) {
+        if (el.getAttribute('body-scroll-lock-ignore') !== null) {
+          return true
+        }
+  
+        el = el.parentNode
+      }
+    },
+  });
+```
+Html:
+```html
+  <div id="container">
+    <div id="scrolling-map" body-scroll-lock-ignore>
+      ...
+    </div>
+  </div>
+```
+
 ## References
 https://medium.com/jsdownunder/locking-body-scroll-for-all-devices-22def9615177
 https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
