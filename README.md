@@ -37,7 +37,7 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
     
     
     
-You can now also load via a `<script src='lib/bodyScrollLock.js></script>` tag (refer to the lib folder).
+You can also load via a `<script src='lib/bodyScrollLock.js></script>` tag (refer to the lib folder).
 
 
 ## Usage examples
@@ -118,11 +118,9 @@ class SomeComponent extends React.Component {
   targetElement = null;
 
   
-  
   componentDidMount() {
     // 3. Get a target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav). 
     this.targetElement = this.targetRef.current; 
-
   }
   
   showTargetElement = () => {
@@ -157,7 +155,7 @@ class SomeComponent extends React.Component {
   }
 }
 
-// 7. SomeOtherComponent needs to be a Class component to receive the ref
+// 7. SomeOtherComponent needs to be a Class component to receive the ref (unless [Hooks](https://reactjs.org/docs/hooks-faq.html#can-i-make-a-ref-to-a-function-component) are used).
 class SomeOtherComponent extends React.Component {
 
   componentDidMount() {
@@ -210,7 +208,7 @@ locked (on iOS), the body scrolls - this is not what this package solves. It sol
 overlays the screen, and scrolling within the modal never causes the body to scroll too (when the top or bottom 
 within the modal has been reached).~~
 
-Since the latest update (thanks @Neddz), this caveat is no longer valid. iOS mobile behaviour should be the same as 
+Since the update from @Neddz, this caveat is no longer valid. iOS mobile behaviour should be the same as 
 other devices (eg. Android Chrome). 
 
 ## Functions
