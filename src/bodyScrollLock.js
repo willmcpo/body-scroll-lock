@@ -4,6 +4,12 @@
 
 export interface BodyScrollOptions {
   reserveScrollBarGap?: boolean;
+  allowTouchMove?: (el: any) => boolean;
+}
+
+interface Lock {
+  targetElement: any;
+  options: BodyScrollOptions;
 }
 
 // Older browsers don't support event options, feature detect it.
@@ -23,17 +29,35 @@ const isIosDevice =
   typeof window !== 'undefined' &&
   window.navigator &&
   window.navigator.platform &&
-  /iPad|iPhone|iPod|(iPad Simulator)|(iPhone Simulator)|(iPod Simulator)/.test(window.navigator.platform);
+  /iP(ad|hone|od)/.test(window.navigator.platform);
 type HandleScrollEvent = TouchEvent;
 
-let allTargetElements: Array<HTMLElement> = [];
+let locks: Array<Lock> = [];
 let documentListenerAdded: boolean = false;
 let initialClientY: number = -1;
 let previousBodyOverflowSetting;
 let previousBodyPaddingRight;
 
+// returns true if `el` should be allowed to receive touchmove events
+const allowTouchMove = (el: EventTarget): boolean =>
+  locks.some(lock => {
+    if (lock.options.allowTouchMove && lock.options.allowTouchMove(el)) {
+      return true;
+    }
+
+    return false;
+  });
+
 const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   const e = rawEvent || window.event;
+
+  // For the case whereby consumers adds a touchmove event listener to document.
+  // Recall that we do document.addEventListener('touchmove', preventDefault, { passive: false })
+  // in disableBodyScroll - so if we provide this opportunity to allowTouchMove, then
+  // the touchmove event on document will break.
+  if (allowTouchMove(e.target)) {
+    return true;
+  }
 
   // Do not prevent if the event has more than one touch (usually meaning this is a multi touch gesture like pinch to zoom)
   if (e.touches.length > 1) return true;
@@ -95,6 +119,10 @@ const isTargetElementTotallyScrolled = (targetElement: any): boolean =>
 const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => {
   const clientY = event.targetTouches[0].clientY - initialClientY;
 
+  if (allowTouchMove(event.target)) {
+    return false;
+  }
+
   if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
     // element is at the top of its scroll
     return preventDefault(event);
@@ -113,8 +141,20 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
   if (isIosDevice) {
     // targetElement must be provided, and disableBodyScroll must not have been
     // called on this targetElement before.
-    if (targetElement && !allTargetElements.includes(targetElement)) {
-      allTargetElements = [...allTargetElements, targetElement];
+    if (!targetElement) {
+      console.warn(
+        'targetElement must be provided, and disableBodyScroll must not have been called on this targetElement before.'
+      );
+      return;
+    }
+
+    if (targetElement && !locks.some(lock => lock.targetElement === targetElement)) {
+      const lock = {
+        targetElement,
+        options: options || {},
+      };
+
+      locks = [...locks, lock];
 
       targetElement.ontouchstart = (event: HandleScrollEvent) => {
         if (event.targetTouches.length === 1) {
@@ -136,16 +176,21 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
     }
   } else {
     setOverflowHidden(options);
-    allTargetElements.push(targetElement);
+    const lock = {
+      targetElement,
+      options: options || {},
+    };
+
+    locks = [...locks, lock];
   }
 };
 
 export const clearAllBodyScrollLocks = (): void => {
   if (isIosDevice) {
-    // Clear all allTargetElements ontouchstart/ontouchmove handlers, and the references
-    allTargetElements.forEach((targetElement: any) => {
-      targetElement.ontouchstart = null;
-      targetElement.ontouchmove = null;
+    // Clear all locks ontouchstart/ontouchmove handlers, and the references
+    locks.forEach((lock: Lock) => {
+      lock.targetElement.ontouchstart = null;
+      lock.targetElement.ontouchmove = null;
     });
 
     if (documentListenerAdded) {
@@ -153,32 +198,38 @@ export const clearAllBodyScrollLocks = (): void => {
       documentListenerAdded = false;
     }
 
-    allTargetElements = [];
+    locks = [];
 
     // Reset initial clientY
     initialClientY = -1;
   } else {
     restoreOverflowSetting();
-    allTargetElements = [];
+    locks = [];
   }
 };
 
 export const enableBodyScroll = (targetElement: any): void => {
   if (isIosDevice) {
+    if (!targetElement) {
+      console.warn('targetElement must be provided when calling enableBodyScroll.');
+      return;
+    }
+
     targetElement.ontouchstart = null;
     targetElement.ontouchmove = null;
 
-    allTargetElements = allTargetElements.filter(element => element !== targetElement);
+    locks = locks.filter(lock => lock.targetElement !== targetElement);
 
-    if (documentListenerAdded && allTargetElements.length === 0) {
+    if (documentListenerAdded && locks.length === 0) {
       document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
+
       documentListenerAdded = false;
     }
-  } else if (allTargetElements.length === 1 && allTargetElements[0] === targetElement) {
+  } else if (locks.length === 1 && locks[0].targetElement === targetElement) {
     restoreOverflowSetting();
 
-    allTargetElements = [];
+    locks = [];
   } else {
-    allTargetElements = allTargetElements.filter(element => element === targetElement);
+    locks = locks.filter(lock => lock.targetElement === targetElement);
   }
 };
