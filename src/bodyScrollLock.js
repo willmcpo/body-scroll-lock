@@ -32,7 +32,6 @@ const isIosDevice =
   /iP(ad|hone|od)/.test(window.navigator.platform);
 type HandleScrollEvent = TouchEvent;
 
-let firstTargetElement: HTMLElement | null = null;
 let locks: Array<Lock> = [];
 let documentListenerAdded: boolean = false;
 let initialClientY: number = -1;
@@ -177,8 +176,12 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
     }
   } else {
     setOverflowHidden(options);
+    const lock = {
+      targetElement,
+      options: options || {},
+    };
 
-    if (!firstTargetElement) firstTargetElement = targetElement;
+    locks = [...locks, lock];
   }
 };
 
@@ -201,8 +204,7 @@ export const clearAllBodyScrollLocks = (): void => {
     initialClientY = -1;
   } else {
     restoreOverflowSetting();
-
-    firstTargetElement = null;
+    locks = [];
   }
 };
 
@@ -223,9 +225,11 @@ export const enableBodyScroll = (targetElement: any): void => {
 
       documentListenerAdded = false;
     }
-  } else if (firstTargetElement === targetElement) {
+  } else if (locks.length === 1 && locks[0].targetElement === targetElement) {
     restoreOverflowSetting();
 
-    firstTargetElement = null;
+    locks = [];
+  } else {
+    locks = locks.filter(lock => lock.targetElement !== targetElement);
   }
 };
