@@ -155,7 +155,7 @@ class SomeComponent extends React.Component {
   }
 }
 
-// 7. SomeOtherComponent needs to be a Class component to receive the ref (unless [Hooks](https://reactjs.org/docs/hooks-faq.html#can-i-make-a-ref-to-a-function-component) are used).
+// 7. SomeOtherComponent needs to be a Class component to receive the ref (unless Hooks - https://reactjs.org/docs/hooks-faq.html#can-i-make-a-ref-to-a-function-component - are used).
 class SomeOtherComponent extends React.Component {
 
   componentDidMount() {
