@@ -117,7 +117,6 @@ class SomeComponent extends React.Component {
   targetRef = React.createRef();
   targetElement = null;
 
-  
   componentDidMount() {
     // 3. Get a target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav). 
     this.targetElement = this.targetRef.current; 
@@ -161,7 +160,6 @@ class SomeOtherComponent extends React.Component {
   componentDidMount() {
     // Your logic on mount goes here
   }
-
 
   // 8. BSL will be applied to div below in SomeOtherComponent and persist scrolling for the container
   render() {   
