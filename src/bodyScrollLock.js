@@ -230,6 +230,6 @@ export const enableBodyScroll = (targetElement: any): void => {
 
     locks = [];
   } else {
-    locks = locks.filter(lock => lock.targetElement === targetElement);
+    locks = locks.filter(lock => lock.targetElement !== targetElement);
   }
 };
