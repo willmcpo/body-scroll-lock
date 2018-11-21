@@ -142,6 +142,7 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
     // targetElement must be provided, and disableBodyScroll must not have been
     // called on this targetElement before.
     if (!targetElement) {
+      // eslint-disable-next-line no-console
       console.warn(
         'targetElement must be provided, and disableBodyScroll must not have been called on this targetElement before.'
       );
@@ -211,6 +212,7 @@ export const clearAllBodyScrollLocks = (): void => {
 export const enableBodyScroll = (targetElement: any): void => {
   if (isIosDevice) {
     if (!targetElement) {
+      // eslint-disable-next-line no-console
       console.warn('targetElement must be provided when calling enableBodyScroll.');
       return;
     }
