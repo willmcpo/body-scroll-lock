@@ -37,7 +37,7 @@ body scroll, but ALSO locks the scroll of a target element (eg. modal).
     
     
     
-You can now also load via a `<script src='lib/bodyScrollLock.js></script>` tag (refer to the lib folder).
+You can also load via a `<script src='lib/bodyScrollLock.js></script>` tag (refer to the lib folder).
 
 
 ## Usage examples
@@ -107,6 +107,71 @@ class SomeComponent extends React.Component {
 }
 ```
 
+##### React/ES6 with Refs
+```javascript
+// 1. Import the functions
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+  
+class SomeComponent extends React.Component {
+  // 2. Initialise your ref and targetElement here
+  targetRef = React.createRef();
+  targetElement = null;
+
+  componentDidMount() {
+    // 3. Get a target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav). 
+    this.targetElement = this.targetRef.current; 
+  }
+  
+  showTargetElement = () => {
+    // ... some logic to show target element
+    
+    // 4. Disable body scroll
+    disableBodyScroll(this.targetElement);
+  };
+  
+  hideTargetElement = () => {
+    // ... some logic to hide target element
+    
+    // 5. Re-enable body scroll
+    enableBodyScroll(this.targetElement);
+  }
+  
+  componentWillUnmount() {
+    // 5. Useful if we have called disableBodyScroll for multiple target elements,
+    // and we just want a kill-switch to undo all that.
+    // OR useful for if the `hideTargetElement()` function got circumvented eg. visitor 
+    // clicks a link which takes him/her to a different page within the app.
+    clearAllBodyScrollLocks();
+  }
+
+  render() {   
+    return (
+      // 6. Pass your ref with the reference to the targetElement to SomeOtherComponent
+      <SomeOtherComponent ref={this.targetElement}>
+        some JSX to go here
+      </SomeOtherComponent> 
+    );
+  }
+}
+
+// 7. SomeOtherComponent needs to be a Class component to receive the ref (unless Hooks - https://reactjs.org/docs/hooks-faq.html#can-i-make-a-ref-to-a-function-component - are used).
+class SomeOtherComponent extends React.Component {
+
+  componentDidMount() {
+    // Your logic on mount goes here
+  }
+
+  // 8. BSL will be applied to div below in SomeOtherComponent and persist scrolling for the container
+  render() {   
+    return (
+      <div>
+        some JSX to go here
+      </div> 
+    );
+  }
+}
+```
+
 ##### Vanilla JS
 In the html:
 ```html
@@ -132,7 +197,6 @@ bodyScrollLock.enableBodyScroll(targetElement);
 bodyScrollLock.clearAllBodyScrollLocks();
 ```
 
-
 ## Demo
 Check out the demo, powered by Now, @ https://bodyscrolllock.now.sh
 
@@ -142,7 +206,7 @@ locked (on iOS), the body scrolls - this is not what this package solves. It sol
 overlays the screen, and scrolling within the modal never causes the body to scroll too (when the top or bottom 
 within the modal has been reached).~~
 
-Since the latest update (thanks @Neddz), this caveat is no longer valid. iOS mobile behaviour should be the same as 
+Since the update from @Neddz, this caveat is no longer valid. iOS mobile behaviour should be the same as 
 other devices (eg. Android Chrome). 
 
 ## Functions

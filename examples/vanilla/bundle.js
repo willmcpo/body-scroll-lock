@@ -159,7 +159,6 @@
             window.navigator.platform &&
             /iP(ad|hone|od)/.test(window.navigator.platform);
 
-          var firstTargetElement = null;
           var locks = [];
           var documentListenerAdded = false;
           var initialClientY = -1;
@@ -307,8 +306,12 @@
               }
             } else {
               setOverflowHidden(options);
+              var _lock = {
+                targetElement: targetElement,
+                options: options || {},
+              };
 
-              if (!firstTargetElement) firstTargetElement = targetElement;
+              locks = [].concat(_toConsumableArray(locks), [_lock]);
             }
           });
 
@@ -335,8 +338,7 @@
               initialClientY = -1;
             } else {
               restoreOverflowSetting();
-
-              firstTargetElement = null;
+              locks = [];
             }
           });
 
@@ -360,10 +362,14 @@
 
                 documentListenerAdded = false;
               }
-            } else if (!targetElement || firstTargetElement === targetElement) {
+            } else if (!targetElement || (locks.length === 1 && locks[0].targetElement === targetElement)) {
               restoreOverflowSetting();
 
-              firstTargetElement = null;
+              locks = [];
+            } else {
+              locks = locks.filter(function(lock) {
+                return lock.targetElement !== targetElement;
+              });
             }
           });
         });
