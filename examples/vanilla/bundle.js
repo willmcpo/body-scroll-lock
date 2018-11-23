@@ -34,24 +34,71 @@
       function(require, module, exports) {
         const bodyScrollLock = require('../../lib/bodyScrollLock.js');
 
+        const scrollTarget = document.querySelector('.scrollTarget');
         const disableBodyScrollButton = document.querySelector('.disableBodyScroll');
         const enableBodyScrollButton = document.querySelector('.enableBodyScroll');
+        const disableBodyScrollButtonNoTargetElement = document.querySelector('.disableBodyScrollNoTargetElement');
+        const enableBodyScrollButtonNoTargetElement = document.querySelector('.enableBodyScrollNoTargetElement');
         const statusElement = document.querySelector('.bodyScrollLockStatus');
+        const targetStatusElement = document.querySelector('.targetElementLockStatus');
 
-        disableBodyScrollButton.onclick = function() {
+        function clearActiveButton() {
+          const enabledButton = document.querySelector('.active');
+          if (enabledButton) {
+            enabledButton.classList.remove('active');
+          }
+        }
+
+        disableBodyScrollButton.onclick = function(e) {
           console.info('disableBodyScrollButton');
-          bodyScrollLock.disableBodyScroll(document.querySelector('.scrollTarget'));
+          clearActiveButton();
+          e.target.classList.add('active');
+          bodyScrollLock.disableBodyScroll(scrollTarget);
 
           statusElement.innerHTML = ' &mdash; Scroll Locked';
           statusElement.style.color = 'red';
+
+          targetStatusElement.innerHTML = ' &mdash; Scroll Enabled';
+          targetStatusElement.style.color = 'green';
         };
 
-        enableBodyScrollButton.onclick = function() {
+        enableBodyScrollButton.onclick = function(e) {
           console.info('enableBodyScrollButton');
-          bodyScrollLock.enableBodyScroll(document.querySelector('.scrollTarget'));
+          clearActiveButton();
+          e.target.classList.add('active');
+          bodyScrollLock.enableBodyScroll(scrollTarget);
 
           statusElement.innerHTML = ' &mdash; Scroll Unlocked';
           statusElement.style.color = '';
+
+          targetStatusElement.innerHTML = '';
+          targetStatusElement.style.color = '';
+        };
+
+        disableBodyScrollButtonNoTargetElement.onclick = function(e) {
+          console.info('disableBodyScrollButtonNoTargetElement');
+          clearActiveButton();
+          e.target.classList.add('active');
+          bodyScrollLock.disableBodyScroll();
+
+          statusElement.innerHTML = ' &mdash; Scroll Locked';
+          statusElement.style.color = 'red';
+
+          targetStatusElement.innerHTML = '';
+          targetStatusElement.style.color = '';
+        };
+
+        enableBodyScrollButtonNoTargetElement.onclick = function(e) {
+          console.info('enableBodyScrollButtonNoTargetElement');
+          clearActiveButton();
+          e.target.classList.add('active');
+          bodyScrollLock.enableBodyScroll();
+
+          statusElement.innerHTML = ' &mdash; Scroll Unlocked';
+          statusElement.style.color = '';
+
+          targetStatusElement.innerHTML = '';
+          targetStatusElement.style.color = '';
         };
       },
       { '../../lib/bodyScrollLock.js': 2 },
@@ -223,16 +270,6 @@
 
           var disableBodyScroll = (exports.disableBodyScroll = function disableBodyScroll(targetElement, options) {
             if (isIosDevice) {
-              // targetElement must be provided, and disableBodyScroll must not have been
-              // called on this targetElement before.
-              if (!targetElement) {
-                // eslint-disable-next-line no-console
-                console.warn(
-                  'targetElement must be provided, and disableBodyScroll must not have been called on this targetElement before.'
-                );
-                return;
-              }
-
               if (
                 targetElement &&
                 !locks.some(function(lock) {
@@ -258,15 +295,14 @@
                     handleScroll(event, targetElement);
                   }
                 };
-
-                if (!documentListenerAdded) {
-                  document.addEventListener(
-                    'touchmove',
-                    preventDefault,
-                    hasPassiveEvents ? { passive: false } : undefined
-                  );
-                  documentListenerAdded = true;
-                }
+              }
+              if (!documentListenerAdded) {
+                document.addEventListener(
+                  'touchmove',
+                  preventDefault,
+                  hasPassiveEvents ? { passive: false } : undefined
+                );
+                documentListenerAdded = true;
               }
             } else {
               setOverflowHidden(options);
@@ -308,18 +344,14 @@
 
           var enableBodyScroll = (exports.enableBodyScroll = function enableBodyScroll(targetElement) {
             if (isIosDevice) {
-              if (!targetElement) {
-                // eslint-disable-next-line no-console
-                console.warn('targetElement must be provided when calling enableBodyScroll.');
-                return;
+              if (targetElement) {
+                targetElement.ontouchstart = null;
+                targetElement.ontouchmove = null;
+
+                locks = locks.filter(function(lock) {
+                  return lock.targetElement !== targetElement;
+                });
               }
-
-              targetElement.ontouchstart = null;
-              targetElement.ontouchmove = null;
-
-              locks = locks.filter(function(lock) {
-                return lock.targetElement !== targetElement;
-              });
 
               if (documentListenerAdded && locks.length === 0) {
                 document.removeEventListener(
@@ -330,7 +362,7 @@
 
                 documentListenerAdded = false;
               }
-            } else if (locks.length === 1 && locks[0].targetElement === targetElement) {
+            } else if (!targetElement || (locks.length === 1 && locks[0].targetElement === targetElement)) {
               restoreOverflowSetting();
 
               locks = [];
