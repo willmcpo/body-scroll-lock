@@ -36,10 +36,8 @@
         background: #7ca5ed;
       }
 
-      button:active,
-      button.active {
+      button:active {
         background: #5088ed;
-        color: white;
       }
 
       .buttonsContainer {
@@ -74,16 +72,10 @@
   <body>
     <h2>Body Scroll Lock (BSL) - Demo</h2>
     <div class="buttonsContainer">
-      With <code>targetElement</code>
       <button class="disableBodyScroll" ontouchstart="" style="-webkit-tap-highlight-color: rgba(0,0,0,0);">Disable Body Scroll</button>
       <button class="enableBodyScroll" ontouchstart="" style="-webkit-tap-highlight-color: rgba(0,0,0,0);">Enable Body Scroll</button>
     </div>
-    <div class="buttonsContainer">
-      Without <code>targetElement</code>
-      <button class="disableBodyScrollNoTargetElement" ontouchstart="" style="-webkit-tap-highlight-color: rgba(0,0,0,0);">Disable Body Scroll</button>
-      <button class="enableBodyScrollNoTargetElement" ontouchstart="" style="-webkit-tap-highlight-color: rgba(0,0,0,0);">Enable Body Scroll</button>
-    </div>
-    <h3 class="mainHeading">Scroll Target (<code>targetElement</code>)</h3><span class="targetElementLockStatus"></span>
+    <h3>Scroll Target</h3>
     <div class="scrollTarget">
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin aliquet cursus lectus nec ultricies. Sed feugiat lacus ac sapien congue, vel suscipit purus tristique. Quisque vel sagittis dui. Nam sit amet ipsum eu tortor blandit luctus. Cras imperdiet diam mi, quis vulputate turpis malesuada eu. Nullam rutrum sapien nunc. Aliquam imperdiet iaculis ligula ac iaculis. Maecenas tortor turpis, ultricies non magna volutpat, tempus dictum diam. Morbi quis lacus ac tortor dignissim rhoncus. Curabitur commodo cursus egestas. Integer sollicitudin venenatis magna at egestas.
