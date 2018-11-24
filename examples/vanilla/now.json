@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "name": "Body Scroll Lock (BSL)",
   "alias": "bodyscrolllock.now.sh",
   "type": "static"
