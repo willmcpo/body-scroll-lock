@@ -227,8 +227,8 @@
               // called on this targetElement before.
               if (!targetElement) {
                 // eslint-disable-next-line no-console
-                console.warn(
-                  'targetElement must be provided, and disableBodyScroll must not have been called on this targetElement before.'
+                console.error(
+                  'disableBodyScroll unsuccessful - targetElement must be provided when calling disableBodyScroll on IOS devices.'
                 );
                 return;
               }
@@ -310,7 +310,9 @@
             if (isIosDevice) {
               if (!targetElement) {
                 // eslint-disable-next-line no-console
-                console.warn('targetElement must be provided when calling enableBodyScroll.');
+                console.error(
+                  'enableBodyScroll unsuccessful - targetElement must be provided when calling enableBodyScroll on IOS devices.'
+                );
                 return;
               }
 
