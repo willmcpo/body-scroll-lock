@@ -4,6 +4,7 @@
 
 export interface BodyScrollOptions {
   reserveScrollBarGap?: boolean;
+  paddingRightElement?: any;
   allowTouchMove?: (el: any) => boolean;
 }
 
@@ -36,7 +37,8 @@ let locks: Array<Lock> = [];
 let documentListenerAdded: boolean = false;
 let initialClientY: number = -1;
 let previousBodyOverflowSetting;
-let previousBodyPaddingRight;
+let previousPaddingRight;
+let previousPaddingRightElement;
 
 // returns true if `el` should be allowed to receive touchmove events
 const allowTouchMove = (el: EventTarget): boolean =>
@@ -71,14 +73,17 @@ const setOverflowHidden = (options?: BodyScrollOptions) => {
   // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
   // the responsiveness for some reason. Setting within a setTimeout fixes this.
   setTimeout(() => {
-    // If previousBodyPaddingRight is already set, don't set it again.
-    if (previousBodyPaddingRight === undefined) {
+    // If previousPaddingRight is already set, don't set it again.
+    if (previousPaddingRight === undefined && previousPaddingRightElement === undefined) {
       const reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
       const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
 
       if (reserveScrollBarGap && scrollBarGap > 0) {
-        previousBodyPaddingRight = document.body.style.paddingRight;
-        document.body.style.paddingRight = `${scrollBarGap}px`;
+        const paddingRightElement =
+          options && options.paddingRightElement ? options.paddingRightElement : document.body;
+        previousPaddingRight = paddingRightElement.style.paddingRight;
+        paddingRightElement.style.paddingRight = `${scrollBarGap}px`;
+        previousPaddingRightElement = paddingRightElement;
       }
     }
 
@@ -94,12 +99,13 @@ const restoreOverflowSetting = () => {
   // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
   // the responsiveness for some reason. Setting within a setTimeout fixes this.
   setTimeout(() => {
-    if (previousBodyPaddingRight !== undefined) {
-      document.body.style.paddingRight = previousBodyPaddingRight;
+    if (previousPaddingRight !== undefined && previousPaddingRightElement !== undefined) {
+      previousPaddingRightElement.style.paddingRight = previousPaddingRight;
 
-      // Restore previousBodyPaddingRight to undefined so setOverflowHidden knows it
+      // Restore previousPaddingRight to undefined so setOverflowHidden knows it
       // can be set again.
-      previousBodyPaddingRight = undefined;
+      previousPaddingRight = undefined;
+      previousPaddingRightElement = undefined;
     }
 
     if (previousBodyOverflowSetting !== undefined) {
