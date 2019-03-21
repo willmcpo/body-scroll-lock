@@ -21,8 +21,9 @@ if (typeof window !== 'undefined') {
       return undefined;
     },
   };
-  window.addEventListener('testPassive', null, passiveTestOptions);
-  window.removeEventListener('testPassive', null, passiveTestOptions);
+  const testHandler = () => {};
+  window.addEventListener('testPassive', testHandler, passiveTestOptions);
+  window.removeEventListener('testPassive', testHandler, passiveTestOptions);
 }
 
 const isIosDevice =
