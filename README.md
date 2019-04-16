@@ -237,18 +237,18 @@ enableBodyScroll(targetElement, options);
 ```
 
 ## Options
-### paddingRightElement
-**optional, default:** document.body
+### paddingRightElements
+**optional, default:** [document.body]
 
 By default when `reserveScrollBarGap` option is set, padding is added to the body element.
-If you want the padding to be added to another element define this with the `paddingRightElement` option.
+If you want the padding to be added to another element define this with the `paddingRightElements` option.
 ``` js
 import { enableBodyScroll } from 'body-scroll-lock';
 import type { BodyScrollOptions } from 'body-scroll-lock';
 
 const options: BodyScrollOptions = {
     reserveScrollBarGap: true,
-    paddingRightElement: document.getElementById('menu')
+    paddingRightElements: [document.body, document.getElementById('menu')]
 }
 
 enableBodyScroll(targetElement, options);
