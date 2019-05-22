@@ -17,7 +17,7 @@ Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/
 
 *Aren't the alternative approaches sufficient?*
 
-- the approach `document.body.ontouchmove = (e) => { e.preventDefault; return false; };` locks the
+- the approach `document.body.ontouchmove = (e) => { e.preventDefault(); return false; };` locks the
 body scroll, but ALSO locks the scroll of a target element (eg. modal).
 - the approach `overflow: hidden` on the body or html elements doesn't work for all browsers
 - the `position: fixed` approach causes the body scroll to reset
