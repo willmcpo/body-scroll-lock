@@ -6,6 +6,9 @@
   "author": "Will Po",
   "repository": "https://github.com/willmcpo/body-scroll-lock.git",
   "license": "MIT",
+  "files": [
+    "lib"
+  ],
   "keywords": [
     "body scroll",
     "body scroll lock",
