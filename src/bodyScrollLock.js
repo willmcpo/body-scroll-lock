@@ -2,8 +2,14 @@
 // Adopted and modified solution from Bohdan Didukh (2017)
 // https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
 
+interface PaddingRightElement {
+  targetElement: any;
+  previous: any;
+}
+
 export interface BodyScrollOptions {
   reserveScrollBarGap?: boolean;
+  paddingRightElements?: any;
   allowTouchMove?: (el: any) => boolean;
 }
 
@@ -36,7 +42,7 @@ let locks: Array<Lock> = [];
 let documentListenerAdded: boolean = false;
 let initialClientY: number = -1;
 let previousBodyOverflowSetting;
-let previousBodyPaddingRight;
+let paddingRightElements: Array<PaddingRightElement>;
 
 // returns true if `el` should be allowed to receive touchmove events
 const allowTouchMove = (el: EventTarget): boolean =>
@@ -71,13 +77,27 @@ const setOverflowHidden = (options?: BodyScrollOptions) => {
   // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
   // the responsiveness for some reason. Setting within a setTimeout fixes this.
   setTimeout(() => {
-    // If previousBodyPaddingRight is already set, don't set it again.
-    if (previousBodyPaddingRight === undefined) {
-      const reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
-      const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
+    const reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
+    const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
 
-      if (reserveScrollBarGap && scrollBarGap > 0) {
-        previousBodyPaddingRight = document.body.style.paddingRight;
+    if (reserveScrollBarGap && scrollBarGap > 0) {
+      paddingRightElements = [];
+
+      // Transform paddingRightElements option to Array<PaddingRightElement>
+      if (options && options.paddingRightElements) {
+        options.paddingRightElements.forEach(item => {
+          paddingRightElements.push({
+            targetElement: item,
+            previous: item.style.paddingRight,
+          });
+          item.style.paddingRight = `${scrollBarGap}px`;
+        });
+      } else {
+        // Add document.body to paddingRightElements if not set
+        paddingRightElements.push({
+          targetElement: document.body,
+          previous: document.body.style.paddingRight,
+        });
         document.body.style.paddingRight = `${scrollBarGap}px`;
       }
     }
@@ -94,12 +114,14 @@ const restoreOverflowSetting = () => {
   // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
   // the responsiveness for some reason. Setting within a setTimeout fixes this.
   setTimeout(() => {
-    if (previousBodyPaddingRight !== undefined) {
-      document.body.style.paddingRight = previousBodyPaddingRight;
+    if (paddingRightElements && paddingRightElements.length > 0) {
+      paddingRightElements.forEach((item: PaddingRightElement) => {
+        if (item.previous !== undefined) {
+          item.targetElement.style.paddingRight = item.previous;
+        }
+      });
 
-      // Restore previousBodyPaddingRight to undefined so setOverflowHidden knows it
-      // can be set again.
-      previousBodyPaddingRight = undefined;
+      paddingRightElements = [];
     }
 
     if (previousBodyOverflowSetting !== undefined) {
@@ -177,12 +199,15 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
     }
   } else {
     setOverflowHidden(options);
-    const lock = {
-      targetElement,
-      options: options || {},
-    };
 
-    locks = [...locks, lock];
+    if (!locks.some(lock => lock.targetElement === targetElement)) {
+      const lock = {
+        targetElement,
+        options: options || {},
+      };
+
+      locks = [...locks, lock];
+    }
   }
 };
 
