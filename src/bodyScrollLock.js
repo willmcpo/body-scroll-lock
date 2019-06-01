@@ -37,6 +37,7 @@ let documentListenerAdded: boolean = false;
 let initialClientY: number = -1;
 let previousBodyOverflowSetting;
 let previousBodyPaddingRight;
+let allowDefaultScrolling = false;
 
 // returns true if `el` should be allowed to receive touchmove events
 const allowTouchMove = (el: EventTarget): boolean =>
@@ -61,6 +62,12 @@ const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
 
   // Do not prevent if the event has more than one touch (usually meaning this is a multi touch gesture like pinch to zoom)
   if (e.touches.length > 1) return true;
+
+  // Allow default scrolling if target element not scrolled to its edge
+  if (allowDefaultScrolling) {
+    allowDefaultScrolling = false;
+    return true;
+  }
 
   if (e.preventDefault) e.preventDefault();
 
@@ -133,7 +140,7 @@ const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => 
     return preventDefault(event);
   }
 
-  event.stopPropagation();
+  allowDefaultScrolling = true;
   return true;
 };
 
