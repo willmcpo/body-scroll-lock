@@ -4,7 +4,6 @@
 
 export interface BodyScrollOptions {
   reserveScrollBarGap?: boolean;
-  allowTouchMove?: (el: any) => boolean;
 }
 
 interface Lock {
@@ -39,26 +38,8 @@ let previousBodyOverflowSetting;
 let previousBodyPaddingRight;
 let allowDefaultScrolling = false;
 
-// returns true if `el` should be allowed to receive touchmove events
-const allowTouchMove = (el: EventTarget): boolean =>
-  locks.some(lock => {
-    if (lock.options.allowTouchMove && lock.options.allowTouchMove(el)) {
-      return true;
-    }
-
-    return false;
-  });
-
 const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   const e = rawEvent || window.event;
-
-  // For the case whereby consumers adds a touchmove event listener to document.
-  // Recall that we do document.addEventListener('touchmove', preventDefault, { passive: false })
-  // in disableBodyScroll - so if we provide this opportunity to allowTouchMove, then
-  // the touchmove event on document will break.
-  if (allowTouchMove(e.target)) {
-    return true;
-  }
 
   // Do not prevent if the event has more than one touch (usually meaning this is a multi touch gesture like pinch to zoom)
   if (e.touches.length > 1) return true;
@@ -126,10 +107,6 @@ const isTargetElementTotallyScrolled = (targetElement: any): boolean =>
 const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => {
   const clientY = event.targetTouches[0].clientY - initialClientY;
 
-  if (allowTouchMove(event.target)) {
-    return false;
-  }
-
   if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
     // element is at the top of its scroll
     return preventDefault(event);
@@ -156,7 +133,7 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
       return;
     }
 
-    if (targetElement && !locks.some(lock => lock.targetElement === targetElement)) {
+    if (!locks.some(lock => lock.targetElement === targetElement)) {
       const lock = {
         targetElement,
         options: options || {},
