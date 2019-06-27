@@ -229,11 +229,10 @@ export const enableBodyScroll = (targetElement: any): void => {
 
       documentListenerAdded = false;
     }
-  } else if (locks.length === 1 && locks[0].targetElement === targetElement) {
-    restoreOverflowSetting();
-
-    locks = [];
   } else {
     locks = locks.filter(lock => lock.targetElement !== targetElement);
+    if (!locks.length) {
+      restoreOverflowSetting();
+    }
   }
 };
