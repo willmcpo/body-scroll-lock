@@ -1,6 +1,6 @@
 {
   "name": "body-scroll-lock",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element (eg. modal/lightbox/flyouts/nav-menus)",
   "main": "lib/bodyScrollLock.min.js",
   "author": "Will Po",
@@ -43,6 +43,7 @@
     "eslint": "^4.15.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-config-babel": "^7.0.2",
+    "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-flowtype": "^2.41.0",
     "eslint-plugin-import": "^2.8.0",
     "flow-bin": "^0.86.0",

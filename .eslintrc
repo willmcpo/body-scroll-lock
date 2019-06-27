@@ -1,5 +1,5 @@
 {
-  "extends": ["airbnb-base", "plugin:flowtype/recommended"],
+  "extends": ["airbnb-base", "plugin:flowtype/recommended", "prettier"],
   "rules": {
     "flowtype/define-flow-type": 2,
     "arrow-parens": 0,
