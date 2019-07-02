@@ -153,7 +153,7 @@ class SomeComponent extends React.Component {
   render() {   
     return (
       // 6. Pass your ref with the reference to the targetElement to SomeOtherComponent
-      <SomeOtherComponent ref={this.targetElement}>
+      <SomeOtherComponent ref={this.targetRef}>
         some JSX to go here
       </SomeOtherComponent> 
     );
