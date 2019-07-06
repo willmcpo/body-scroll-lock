@@ -286,3 +286,6 @@ Html:
 ## References
 https://medium.com/jsdownunder/locking-body-scroll-for-all-devices-22def9615177
 https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
+
+## Changelog
+Refer to the [releases](https://github.com/willmcpo/body-scroll-lock/releases) page.
