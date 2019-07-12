@@ -221,8 +221,8 @@ other devices (eg. Android Chrome).
 
 | Function | Arguments | Return | Description |
 | :--- | :--- | :---: | :--- |
-| `disableBodyScroll` | `targetElement: HTMLElement` | `void` | Disables body scroll while enabling scroll on target element |
-| `enableBodyScroll` | `targetElement: HTMLElement`<br/>`options: BodyScrollOptions` | `void` | Enables body scroll and removing listeners on target element |
+| `disableBodyScroll` | `targetElement: HTMLElement` <br/>`options: BodyScrollOptions`| `void` | Disables body scroll while enabling scroll on target element |
+| `enableBodyScroll` | `targetElement: HTMLElement` | `void` | Enables body scroll and removing listeners on target element |
 | `clearAllBodyScrollLocks` | `null` | `void` | Clears all scroll locks |
 
 ## Options
