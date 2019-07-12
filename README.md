@@ -234,14 +234,14 @@ unpleasant flickering effect, especially on websites with centered content. If t
 this gap is filled by a `padding-right` on the body element. If `disableBodyScroll` is called for the last target element,
 or `clearAllBodyScrollLocks` is called, the `padding-right` is automatically reset to the previous value.
 ``` js
-import { enableBodyScroll } from 'body-scroll-lock';
+import { disableBodyScroll } from 'body-scroll-lock';
 import type { BodyScrollOptions } from 'body-scroll-lock';
 
 const options: BodyScrollOptions = {
     reserveScrollBarGap: true
 }
 
-enableBodyScroll(targetElement, options);
+disableBodyScroll(targetElement, options);
 ```
 
 ### allowTouchMove
