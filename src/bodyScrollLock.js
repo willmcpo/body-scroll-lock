@@ -67,7 +67,7 @@ const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   return false;
 };
 
-const setOverflowHidden = (options?: BodyScrollOptions) => {
+const setOverflowHidden = (options?: BodyScrollOptions, callback?: (scrollbarGapSize: number) => void) => {
   // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
   // the responsiveness for some reason. Setting within a setTimeout fixes this.
   setTimeout(() => {
@@ -79,6 +79,9 @@ const setOverflowHidden = (options?: BodyScrollOptions) => {
       if (reserveScrollBarGap && scrollBarGap > 0) {
         previousBodyPaddingRight = document.body.style.paddingRight;
         document.body.style.paddingRight = `${scrollBarGap}px`;
+        if (callback) {
+          callback(scrollBarGap);
+        }
       }
     }
 
@@ -90,12 +93,15 @@ const setOverflowHidden = (options?: BodyScrollOptions) => {
   });
 };
 
-const restoreOverflowSetting = () => {
+const restoreOverflowSetting = (callback?: (scrollbarGapSize: number) => void) => {
   // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
   // the responsiveness for some reason. Setting within a setTimeout fixes this.
   setTimeout(() => {
     if (previousBodyPaddingRight !== undefined) {
       document.body.style.paddingRight = previousBodyPaddingRight;
+      if (callback) {
+        callback(0);
+      }
 
       // Restore previousBodyPaddingRight to undefined so setOverflowHidden knows it
       // can be set again.
@@ -137,7 +143,11 @@ const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => 
   return true;
 };
 
-export const disableBodyScroll = (targetElement: any, options?: BodyScrollOptions): void => {
+export const disableBodyScroll = (
+  targetElement: any,
+  options?: BodyScrollOptions,
+  callback?: (scrollbarGapSize: number) => void
+): void => {
   if (isIosDevice) {
     // targetElement must be provided, and disableBodyScroll must not have been
     // called on this targetElement before.
@@ -176,7 +186,7 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
       }
     }
   } else {
-    setOverflowHidden(options);
+    setOverflowHidden(options, callback);
     const lock = {
       targetElement,
       options: options || {},
@@ -186,7 +196,7 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
   }
 };
 
-export const clearAllBodyScrollLocks = (): void => {
+export const clearAllBodyScrollLocks = (callback?: (scrollbarGapSize: number) => void): void => {
   if (isIosDevice) {
     // Clear all locks ontouchstart/ontouchmove handlers, and the references.
     locks.forEach((lock: Lock) => {
@@ -204,12 +214,12 @@ export const clearAllBodyScrollLocks = (): void => {
     // Reset initial clientY.
     initialClientY = -1;
   } else {
-    restoreOverflowSetting();
+    restoreOverflowSetting(callback);
     locks = [];
   }
 };
 
-export const enableBodyScroll = (targetElement: any): void => {
+export const enableBodyScroll = (targetElement: any, callback?: (scrollbarGapSize: number) => void): void => {
   if (isIosDevice) {
     if (!targetElement) {
       // eslint-disable-next-line no-console
@@ -232,7 +242,7 @@ export const enableBodyScroll = (targetElement: any): void => {
   } else {
     locks = locks.filter(lock => lock.targetElement !== targetElement);
     if (!locks.length) {
-      restoreOverflowSetting();
+      restoreOverflowSetting(callback);
     }
   }
 };
