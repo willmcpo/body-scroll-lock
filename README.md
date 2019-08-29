@@ -221,9 +221,9 @@ other devices (eg. Android Chrome).
 
 | Function | Arguments | Return | Description |
 | :--- | :--- | :---: | :--- |
-| `disableBodyScroll` | `targetElement: HTMLElement` <br/>`options: BodyScrollOptions`| `void` | Disables body scroll while enabling scroll on target element |
-| `enableBodyScroll` | `targetElement: HTMLElement` | `void` | Enables body scroll and removing listeners on target element |
-| `clearAllBodyScrollLocks` | `null` | `void` | Clears all scroll locks |
+| `disableBodyScroll` | `targetElement: HTMLElement` <br/>`options: BodyScrollOptions` <br/>`callback: (scrollbarGapSize: number) => void` | `void` | Disables body scroll while enabling scroll on target element |
+| `enableBodyScroll` | `targetElement: HTMLElement` <br/>`callback: (scrollbarGapSize: number) => void` | `void` | Enables body scroll and removing listeners on target element |
+| `clearAllBodyScrollLocks` |  `callback: (scrollbarGapSize: number) => void` | `void` | Clears all scroll locks |
 
 ## Options
 ### reserveScrollBarGap
@@ -283,6 +283,26 @@ Html:
   </div>
 ```
 
+## Callback
+
+Callback (optional) is called after `body` element padding is set when `overflow: hidden` is applied if 
+`reserveScrollBarGap` options is set to `true`. Callback receives scroll bar width as an argument might be usefull 
+to apply the same padding as for body element to elements that have `position: fixed`.
+
+```javascript
+const options: BodyScrollOptions = {
+    reserveScrollBarGap: true
+}
+
+disableBodyScroll(targetElement, options, (scrollbarGapSize) => {
+  document.getElementById('fixed').style.paddingRight = scrollbarGapSize + 'px';
+});
+
+enableBodyScroll(targetElement, () => {
+  document.getElementById('fixed').style.paddingRight = 0;
+});
+````
+ 
 ## References
 https://medium.com/jsdownunder/locking-body-scroll-for-all-devices-22def9615177
 https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
