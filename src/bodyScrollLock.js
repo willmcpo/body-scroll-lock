@@ -34,9 +34,12 @@ type HandleScrollEvent = TouchEvent;
 
 let locks: Array<Lock> = [];
 let documentListenerAdded: boolean = false;
-let initialClientY: number = -1;
+let initialClient: { x: number, y: number } = { x: -1, y: -1 };
 let previousBodyOverflowSetting;
 let previousBodyPaddingRight;
+
+type Axis = 'x' | 'y';
+let axis: ?Axis = null;
 
 // returns true if `el` should be allowed to receive touchmove events.
 const allowTouchMove = (el: EventTarget): boolean =>
@@ -113,22 +116,32 @@ const restoreOverflowSetting = () => {
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
-const isTargetElementTotallyScrolled = (targetElement: any): boolean =>
-  targetElement ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight : false;
+const isTargetElementTotallyScrolled = (targetElement: any, axis: Axis): boolean => {
+  if (targetElement) {
+    const totalScroll = targetElement[`scroll${axis === 'y' ? 'Height' : 'Width'}`];
+    const scrolled = targetElement[`scroll${axis === 'y' ? 'Top' : 'Left'}`];
+    const clientSize = targetElement[`client${axis === 'y' ? 'Height' : 'Width'}`];
+    return totalScroll - scrolled <= clientSize;
+  }
+  return false;
+};
 
-const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => {
-  const clientY = event.targetTouches[0].clientY - initialClientY;
+const handleScroll = (event: HandleScrollEvent, targetElement: any, axis: Axis): boolean => {
+  const touch = event.targetTouches[0];
+  const initialPos = initialClient[axis];
+  const scrollPos = targetElement && targetElement[`scroll${axis === 'y' ? 'Top' : 'Left'}`];
+  const clientPos = (axis === 'y' ? touch.clientY : touch.clientX) - initialPos;
 
   if (allowTouchMove(event.target)) {
     return false;
   }
 
-  if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
+  if (targetElement && scrollPos === 0 && clientPos > 0) {
     // element is at the top of its scroll.
     return preventDefault(event);
   }
 
-  if (isTargetElementTotallyScrolled(targetElement) && clientY < 0) {
+  if (isTargetElementTotallyScrolled(targetElement, axis) && clientPos < 0) {
     // element is at the top of its scroll.
     return preventDefault(event);
   }
@@ -160,13 +173,22 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
       targetElement.ontouchstart = (event: HandleScrollEvent) => {
         if (event.targetTouches.length === 1) {
           // detect single touch.
-          initialClientY = event.targetTouches[0].clientY;
+          initialClient = {
+            x: event.targetTouches[0].clientX,
+            y: event.targetTouches[0].clientY,
+          };
+          axis = null;
         }
       };
       targetElement.ontouchmove = (event: HandleScrollEvent) => {
         if (event.targetTouches.length === 1) {
           // detect single touch.
-          handleScroll(event, targetElement);
+          if (!axis) {
+            const distX = Math.abs(initialClient.x - event.targetTouches[0].clientX);
+            const distY = Math.abs(initialClient.y - event.targetTouches[0].clientY);
+            axis = distX > distY ? 'x' : 'y';
+          }
+          handleScroll(event, targetElement, axis);
         }
       };
 
@@ -202,7 +224,8 @@ export const clearAllBodyScrollLocks = (): void => {
     locks = [];
 
     // Reset initial clientY.
-    initialClientY = -1;
+    initialClient = { x: -1, y: -1 };
+    axis = null;
   } else {
     restoreOverflowSetting();
     locks = [];
