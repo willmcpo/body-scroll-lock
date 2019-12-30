@@ -231,8 +231,10 @@ other devices (eg. Android Chrome).
 
 If the overflow property of the body is set to hidden, the body widens by the width of the scrollbar. This produces an
 unpleasant flickering effect, especially on websites with centered content. If the `reserveScrollBarGap` option is set,
-this gap is filled by a `padding-right` on the body element. If `disableBodyScroll` is called for the last target element,
-or `clearAllBodyScrollLocks` is called, the `padding-right` is automatically reset to the previous value.
+this gap is filled by a `padding-right` on the body element and `--body-padding-right` on the `documentElement`. Css
+variable let you compensate padding on the fixed elements (e.g. `right: var(--body-padding-right);` instead of `right: 0;`).
+If `disableBodyScroll` is called for the last target element, or `clearAllBodyScrollLocks` is called, the `padding-right`
+and `--body-padding-right` are automatically reset to the previous value.
 ``` js
 import { disableBodyScroll } from 'body-scroll-lock';
 import type { BodyScrollOptions } from 'body-scroll-lock';
