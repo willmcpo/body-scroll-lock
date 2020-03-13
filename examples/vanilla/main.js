@@ -19,4 +19,3 @@ enableBodyScrollButton.onclick = function() {
   statusElement.innerHTML = ' &mdash; Scroll Unlocked';
   statusElement.style.color = '';
 };
-
