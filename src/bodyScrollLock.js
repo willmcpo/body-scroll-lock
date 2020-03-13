@@ -130,7 +130,7 @@ const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => 
   }
 
   if (isTargetElementTotallyScrolled(targetElement) && clientY < 0) {
-    // element is at the top of its scroll.
+    // element is at the bottom of its scroll.
     return preventDefault(event);
   }
 
