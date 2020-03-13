@@ -242,9 +242,10 @@ disableBodyScroll(targetElement, options);
 
 **optional, default:** undefined
 
-There are cases where you have called `disableBodyScroll` on an element, but you still want some or all
-children of it to receive touch moves still; or in other words, you want child elements to
-ignore the fact that a parent element has the body scroll lock set (and hence, not be affected at all by this setting).
+To disable scrolling on iOS, `disableBodyScroll` prevents `touchmove` events.
+However, there are cases where you have called `disableBodyScroll` on an
+element, but its children still require `touchmove` events to function.
+
 See below for 2 use cases:
 
 ##### Simple
