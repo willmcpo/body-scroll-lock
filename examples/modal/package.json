@@ -1,0 +1,14 @@
+{
+  "name": "body-scroll-lock-example-modal",
+  "description": "Example for body scroll lock, with a Modal",
+  "author": "diachedelic",
+  "license": "MIT",
+  "dependencies": {},
+  "scripts": {
+    "compile": "browserify ./main.js > bundle.js",
+    "deployNow": "now --public && now alias"
+  },
+  "devDependencies": {
+    "browserify": "^16.5.0"
+  }
+}
