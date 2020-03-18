@@ -26,7 +26,7 @@ _Aren't the alternative approaches sufficient?_
 
 _Package Size:_
 
-- LIGHT - package is only 2.8KB and 1.1KB when gzipped (see [here](https://bundlephobia.com/result?p=body-scroll-lock))!
+- LIGHT - package is only 2.6KB and 1KB when gzipped (see [here](https://bundlephobia.com/result?p=body-scroll-lock))!
 
 ## Install
 
