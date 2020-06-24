@@ -26,7 +26,7 @@ _Aren't the alternative approaches sufficient?_
 
 _Package Size:_
 
-- LIGHT - package is only 2.6KB and 1KB when gzipped (see [here](https://bundlephobia.com/result?p=body-scroll-lock))!
+[![minzip size](https://badgen.net/bundlephobia/minzip/body-scroll-lock?color=orange)](https://badgen.net/bundlephobia/minzip/body-scroll-lock?color=orange)
 
 ## Install
 
