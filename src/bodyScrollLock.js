@@ -69,26 +69,26 @@ const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
 };
 
 const setOverflowHidden = (options?: BodyScrollOptions) => {
-  // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
-  // the responsiveness for some reason. Setting within a setTimeout fixes this.
-  setTimeout(() => {
-    // If previousBodyPaddingRight is already set, don't set it again.
-    if (previousBodyPaddingRight === undefined) {
-      const reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
-      const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
+  // If previousBodyPaddingRight is already set, don't set it again.
+  if (previousBodyPaddingRight === undefined) {
+    const reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
+    const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
 
-      if (reserveScrollBarGap && scrollBarGap > 0) {
-        previousBodyPaddingRight = document.body.style.paddingRight;
-        document.body.style.paddingRight = `${scrollBarGap}px`;
-      }
+    if (reserveScrollBarGap && scrollBarGap > 0) {
+      previousBodyPaddingRight = document.body.style.paddingRight;
+      document.body.style.paddingRight = `${scrollBarGap}px`;
     }
+  }
 
-    // If previousBodyOverflowSetting is already set, don't set it again.
-    if (previousBodyOverflowSetting === undefined) {
-      previousBodyOverflowSetting = document.body.style.overflow;
+  // If previousBodyOverflowSetting is already set, don't set it again.
+  if (previousBodyOverflowSetting === undefined) {
+    previousBodyOverflowSetting = document.body.style.overflow;
+    // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
+    // the responsiveness for some reason. Setting within a setTimeout fixes this.
+    setTimeout(() => {
       document.body.style.overflow = 'hidden';
-    }
-  });
+    });
+  }
 };
 
 const restoreOverflowSetting = () => {
