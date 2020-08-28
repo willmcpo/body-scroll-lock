@@ -26,7 +26,7 @@ _Aren't the alternative approaches sufficient?_
 
 _LIGHT Package Size:_
 
-- [![minzip size](https://badgen.net/bundlephobia/minzip/body-scroll-lock?color=orange)](https://badgen.net/bundlephobia/minzip/body-scroll-lock?color=orange)
+[![minzip size](https://badgen.net/bundlephobia/minzip/body-scroll-lock?color=orange)](https://badgen.net/bundlephobia/minzip/body-scroll-lock?color=orange)
 
 ## Install
 
