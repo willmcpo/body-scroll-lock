@@ -24,9 +24,9 @@ _Aren't the alternative approaches sufficient?_
 - the `position: fixed` approach causes the body scroll to reset
 - some approaches break inertia/momentum/rubber-band scrolling on iOS
 
-_Package Size:_
+_LIGHT Package Size:_
 
-[![minzip size](https://badgen.net/bundlephobia/minzip/body-scroll-lock?color=orange)](https://badgen.net/bundlephobia/minzip/body-scroll-lock?color=orange)
+- [![minzip size](https://badgen.net/bundlephobia/minzip/body-scroll-lock?color=orange)](https://badgen.net/bundlephobia/minzip/body-scroll-lock?color=orange)
 
 ## Install
 
@@ -196,17 +196,10 @@ bodyScrollLock.clearAllBodyScrollLocks();
 
 ## Demo
 
-Check out the demo, powered by Now, @ https://bodyscrolllock.now.sh
+Check out the demo, powered by Vercel.
 
-## Caveat
-
-~~On iOS mobile (as is visible in the above demo), if you scroll the body directly even when the scrolling is
-locked (on iOS), the body scrolls - this is not what this package solves. It solves the typical case where a modal
-overlays the screen, and scrolling within the modal never causes the body to scroll too (when the top or bottom
-within the modal has been reached).~~
-
-Since the update from @Neddz, this caveat is no longer valid. iOS mobile behaviour should be the same as
-other devices (eg. Android Chrome).
+* https://bodyscrolllock.vercel.app for a basic example 
+* https://bodyscrolllock-modal.vercel.app for an example with a modal.
 
 ## Functions
 
