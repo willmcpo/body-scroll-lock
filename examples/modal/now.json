@@ -1,6 +1,4 @@
 {
   "version": 2,
-  "name": "Body Scroll Lock (Modal)",
-  "alias": "bodyscrolllock-modal.now.sh",
-  "type": "static"
+  "alias": ["bodyscrolllock-modal"]
 }

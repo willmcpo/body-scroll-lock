@@ -6,7 +6,7 @@
   "dependencies": {},
   "scripts": {
     "compile": "browserify ./main.js > bundle.js",
-    "deployNow": "now --public && now alias"
+    "deployNow": "now --prod"
   },
   "devDependencies": {
     "browserify": "^16.5.0"

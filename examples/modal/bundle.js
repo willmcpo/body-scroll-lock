@@ -120,26 +120,26 @@ enableBodyScrollButton.onclick = function() {
   };
 
   var setOverflowHidden = function setOverflowHidden(options) {
-    // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
-    // the responsiveness for some reason. Setting within a setTimeout fixes this.
-    setTimeout(function () {
-      // If previousBodyPaddingRight is already set, don't set it again.
-      if (previousBodyPaddingRight === undefined) {
-        var _reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
-        var scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
+    // If previousBodyPaddingRight is already set, don't set it again.
+    if (previousBodyPaddingRight === undefined) {
+      var _reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
+      var scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
 
-        if (_reserveScrollBarGap && scrollBarGap > 0) {
-          previousBodyPaddingRight = document.body.style.paddingRight;
-          document.body.style.paddingRight = scrollBarGap + 'px';
-        }
+      if (_reserveScrollBarGap && scrollBarGap > 0) {
+        previousBodyPaddingRight = document.body.style.paddingRight;
+        document.body.style.paddingRight = scrollBarGap + 'px';
       }
+    }
 
-      // If previousBodyOverflowSetting is already set, don't set it again.
-      if (previousBodyOverflowSetting === undefined) {
-        previousBodyOverflowSetting = document.body.style.overflow;
+    // If previousBodyOverflowSetting is already set, don't set it again.
+    if (previousBodyOverflowSetting === undefined) {
+      previousBodyOverflowSetting = document.body.style.overflow;
+      // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
+      // the responsiveness for some reason. Setting within a setTimeout fixes this.
+      setTimeout(function () {
         document.body.style.overflow = 'hidden';
-      }
-    });
+      });
+    }
   };
 
   var restoreOverflowSetting = function restoreOverflowSetting() {
@@ -182,7 +182,7 @@ enableBodyScrollButton.onclick = function() {
     }
 
     if (isTargetElementTotallyScrolled(targetElement) && clientY < 0) {
-      // element is at the top of its scroll.
+      // element is at the bottom of its scroll.
       return preventDefault(event);
     }
 
