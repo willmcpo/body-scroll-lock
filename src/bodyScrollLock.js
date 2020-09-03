@@ -76,6 +76,9 @@ const setOverflowHidden = (options?: BodyScrollOptions) => {
 
     if (reserveScrollBarGap && scrollBarGap > 0) {
       previousBodyPaddingRight = document.body.style.paddingRight;
+      // Set/update css variable for scrollbar gap
+      document.documentElement.style.setProperty('--scrollbar-gap', `${scrollBarGap}px`);
+      document.body.classList.add('body-scroll-lock-active');
       document.body.style.paddingRight = `${scrollBarGap}px`;
     }
   }
@@ -97,7 +100,8 @@ const restoreOverflowSetting = () => {
   setTimeout(() => {
     if (previousBodyPaddingRight !== undefined) {
       document.body.style.paddingRight = previousBodyPaddingRight;
-
+      document.body.classList.remove('body-scroll-lock-active');
+      
       // Restore previousBodyPaddingRight to undefined so setOverflowHidden knows it
       // can be set again.
       previousBodyPaddingRight = undefined;
