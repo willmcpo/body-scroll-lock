@@ -164,7 +164,7 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
       };
 
       if (!documentListenerAdded) {
-        document.addEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
+        document.body.addEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
         documentListenerAdded = true;
       }
     }
@@ -188,7 +188,7 @@ export const clearAllBodyScrollLocks = (): void => {
     });
 
     if (documentListenerAdded) {
-      document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
+      document.body.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
       documentListenerAdded = false;
     }
 
@@ -218,7 +218,7 @@ export const enableBodyScroll = (targetElement: any): void => {
     locks = locks.filter(lock => lock.targetElement !== targetElement);
 
     if (documentListenerAdded && locks.length === 0) {
-      document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
+      document.body.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
 
       documentListenerAdded = false;
     }
