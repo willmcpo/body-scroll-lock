@@ -261,7 +261,7 @@ disableBodyScroll(container, {
         return true;
       }
 
-      el = el.parentNode;
+      el = el.parentElement;
     }
   },
 });
