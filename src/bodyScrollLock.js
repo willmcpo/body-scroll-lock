@@ -216,9 +216,7 @@ export const enableBodyScroll = (targetElement: any): void => {
       document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
       documentListenerAdded = false;
     }
-  } else {
-    if (!locks.length) {
-      restoreOverflowSetting();
-    }
+  } else if (!locks.length) {
+    restoreOverflowSetting();
   }
 };
