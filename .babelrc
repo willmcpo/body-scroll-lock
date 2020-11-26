@@ -1,15 +1,30 @@
 {
-  "presets": [
-    "flow",
-    [
-      "env",
-      {
-        "modules": "umd"
-      }
-    ],
-    "stage-0"
-  ],
-  "plugins": [
-    "transform-flow-strip-types"
-  ]
+  "plugins": ["transform-flow-strip-types"],
+  "env": {
+    "umd": {
+      "presets": [
+        "flow",
+        [
+          "env",
+          {
+            "modules": "umd"
+          }
+        ],
+        "stage-0"
+      ]
+    },
+    "module": {
+      "presets": [
+        "flow",
+        [
+          "env",
+          {
+            "modules": false
+          }
+        ],
+        "stage-0"
+      ]
+    },
+    "es6": {}
+  }
 }
