@@ -4,6 +4,7 @@
 
 export interface BodyScrollOptions {
   reserveScrollBarGap?: boolean;
+  hideBodyOverflow?: boolen;
   allowTouchMove?: (el: any) => boolean;
 }
 
@@ -153,6 +154,10 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
 
   locks = [...locks, lock];
 
+  if (!isIosDevice || options.hideBodyOverflow) {
+    setOverflowHidden(options);
+  }
+
   if (isIosDevice) {
     targetElement.ontouchstart = (event: HandleScrollEvent) => {
       if (event.targetTouches.length === 1) {
@@ -171,17 +176,19 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
       document.addEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
       documentListenerAdded = true;
     }
-  } else {
-    setOverflowHidden(options);
   }
 };
 
 export const clearAllBodyScrollLocks = (): void => {
+  let isBodyOverflowHidden = !isIosDevice;
   if (isIosDevice) {
     // Clear all locks ontouchstart/ontouchmove handlers, and the references.
     locks.forEach((lock: Lock) => {
       lock.targetElement.ontouchstart = null;
       lock.targetElement.ontouchmove = null;
+      if (lock.options.hideBodyOverflow) {
+        isBodyOverflowHidden = true;
+      }
     });
 
     if (documentListenerAdded) {
@@ -191,7 +198,9 @@ export const clearAllBodyScrollLocks = (): void => {
 
     // Reset initial clientY.
     initialClientY = -1;
-  } else {
+  }
+  
+  if (isBodyOverflowHidden) {
     restoreOverflowSetting();
   }
 
@@ -207,6 +216,7 @@ export const enableBodyScroll = (targetElement: any): void => {
     return;
   }
 
+  const isBodyOverflowHidden = !isIosDevice || !!locks.find(lock => lock.options.hideBodyOverflow);
   locks = locks.filter(lock => lock.targetElement !== targetElement);
 
   if (isIosDevice) {
@@ -217,7 +227,9 @@ export const enableBodyScroll = (targetElement: any): void => {
       document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
       documentListenerAdded = false;
     }
-  } else if (!locks.length) {
+  }
+
+  if (isBodyOverflowHidden) {
     restoreOverflowSetting();
   }
 };
