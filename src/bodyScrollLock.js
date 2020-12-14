@@ -4,7 +4,7 @@
 
 export interface BodyScrollOptions {
   reserveScrollBarGap?: boolean;
-  hideBodyOverflow?: boolen;
+  hideBodyOverflow?: boolean;
   allowTouchMove?: (el: any) => boolean;
 }
 
