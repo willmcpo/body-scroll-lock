@@ -35,6 +35,7 @@
   ],
   "dependencies": {},
   "devDependencies": {
+    "@size-limit/preset-small-lib": "^4.9.1",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^10.1.0",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
@@ -53,6 +54,7 @@
     "lint-staged": "^10.0.8",
     "prettier": "^1.10.2",
     "rimraf": "^3.0.2",
+    "size-limit": "^4.9.1",
     "uglify-js": "^3.4.7"
   },
   "scripts": {
@@ -67,7 +69,8 @@
     "prerelease": "yarn flow && yarn lint && yarn run clean && yarn build",
     "flow": "flow",
     "prettierAll": "prettier --write '**/*.{md,json,js,html,yml}'",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "size": "size-limit"
   },
   "lint-staged": {
     "*.js": [
