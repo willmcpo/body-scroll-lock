@@ -21,16 +21,17 @@ if (typeof window !== 'undefined') {
       return undefined;
     },
   };
-  window.addEventListener('testPassive', null, passiveTestOptions);
-  window.removeEventListener('testPassive', null, passiveTestOptions);
+  /* #__PURE__ */ window.addEventListener('testPassive', null, passiveTestOptions);
+  /* #__PURE__ */ window.removeEventListener('testPassive', null, passiveTestOptions);
 }
 
-const isIosDevice =
+const isIosDevice = () =>
   typeof window !== 'undefined' &&
   window.navigator &&
   window.navigator.platform &&
   (/iP(ad|hone|od)/.test(window.navigator.platform) ||
     (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1));
+
 type HandleScrollEvent = TouchEvent;
 
 let locks: Array<Lock> = [];
@@ -153,7 +154,7 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
 
   locks = [...locks, lock];
 
-  if (isIosDevice) {
+  if (isIosDevice()) {
     targetElement.ontouchstart = (event: HandleScrollEvent) => {
       if (event.targetTouches.length === 1) {
         // detect single touch.
@@ -177,7 +178,7 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
 };
 
 export const clearAllBodyScrollLocks = (): void => {
-  if (isIosDevice) {
+  if (isIosDevice()) {
     // Clear all locks ontouchstart/ontouchmove handlers, and the references.
     locks.forEach((lock: Lock) => {
       lock.targetElement.ontouchstart = null;
@@ -209,7 +210,7 @@ export const enableBodyScroll = (targetElement: any): void => {
 
   locks = locks.filter(lock => lock.targetElement !== targetElement);
 
-  if (isIosDevice) {
+  if (isIosDevice()) {
     targetElement.ontouchstart = null;
     targetElement.ontouchmove = null;
 
