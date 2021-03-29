@@ -78,6 +78,7 @@ const setOverflowHidden = (options?: BodyScrollOptions) => {
       const computedBodyPaddingRight = parseInt(getComputedStyle(document.body).getPropertyValue('padding-right'), 10);
       previousBodyPaddingRight = document.body.style.paddingRight;
       document.body.style.paddingRight = `${computedBodyPaddingRight + scrollBarGap}px`;
+      document.body.style.setProperty('--scrollBarWidth', `${scrollBarGap}px`);
     }
   }
 
@@ -91,6 +92,7 @@ const setOverflowHidden = (options?: BodyScrollOptions) => {
 const restoreOverflowSetting = () => {
   if (previousBodyPaddingRight !== undefined) {
     document.body.style.paddingRight = previousBodyPaddingRight;
+    document.body.style.removeProperty('--scrollBarWidth');
 
     // Restore previousBodyPaddingRight to undefined so setOverflowHidden knows it
     // can be set again.
