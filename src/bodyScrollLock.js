@@ -4,7 +4,6 @@
 
 export interface BodyScrollOptions {
   reserveScrollBarGap?: boolean;
-  hideBodyOverflow?: boolean;
   allowTouchMove?: (el: any) => boolean;
 }
 
@@ -38,6 +37,7 @@ let locks: Array<Lock> = [];
 let documentListenerAdded: boolean = false;
 let initialClientY: number = -1;
 let previousBodyOverflowSetting;
+let previousBodyPosition;
 let previousBodyPaddingRight;
 
 // returns true if `el` should be allowed to receive touchmove events.
@@ -76,7 +76,7 @@ const setOverflowHidden = (options?: BodyScrollOptions) => {
     const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
 
     if (reserveScrollBarGap && scrollBarGap > 0) {
-      const computedBodyPaddingRight = parseInt(getComputedStyle(document.body).getPropertyValue('padding-right'), 10);
+      const computedBodyPaddingRight = parseInt(window.getComputedStyle(document.body).getPropertyValue('padding-right'), 10);
       previousBodyPaddingRight = document.body.style.paddingRight;
       document.body.style.paddingRight = `${computedBodyPaddingRight + scrollBarGap}px`;
     }
@@ -104,6 +104,50 @@ const restoreOverflowSetting = () => {
     // Restore previousBodyOverflowSetting to undefined
     // so setOverflowHidden knows it can be set again.
     previousBodyOverflowSetting = undefined;
+  }
+};
+
+const setPositionFixed = () => window.requestAnimationFrame(() => {
+  // If previousBodyPosition is already set, don't set it again.
+  if (previousBodyPosition === undefined) {
+    previousBodyPosition = {
+      position: document.body.style.position,
+      top: document.body.style.top,
+      left: document.body.style.left
+    };
+ 
+    // Update the dom inside an animation frame 
+    const { scrollY, scrollX, innerHeight } = window;
+    document.body.style.position = 'fixed';
+    document.body.style.top =  -scrollY;
+    document.body.style.left = -scrollX; 
+
+    setTimeout(() => window.requestAnimationFrame(() => {
+      // Attempt to check if the bottom bar appeared due to the position change
+      const bottomBarHeight = innerHeight - window.innerHeight;
+      if (bottomBarHeight && scrollY >= innerHeight) {
+        // Move the content further up so that the bottom bar doesn't hide it
+        document.body.style.top = -(scrollY + bottomBarHeight);
+      }
+    }), 300)
+  }
+});
+
+const restorePositionSetting = () => {
+  if (previousBodyPosition !== undefined) {
+    // Convert the position from "px" to Int
+    const y = -parseInt(document.body.style.top, 10);
+    const x = -parseInt(document.body.style.left, 10);
+
+    // Restore styles
+    document.body.style.position = previousBodyPosition.position;
+    document.body.style.top = previousBodyPosition.top;
+    document.body.style.left = previousBodyPosition.left;
+
+    // Restore scroll
+    window.scrollTo(x, y);
+
+    previousBodyPosition = undefined;
   }
 };
 
@@ -154,7 +198,9 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
 
   locks = [...locks, lock];
 
-  if (!isIosDevice || options.hideBodyOverflow) {
+  if (isIosDevice) {
+    setPositionFixed();
+  } else {
     setOverflowHidden(options);
   }
 
@@ -180,15 +226,11 @@ export const disableBodyScroll = (targetElement: any, options?: BodyScrollOption
 };
 
 export const clearAllBodyScrollLocks = (): void => {
-  let isBodyOverflowHidden = !isIosDevice;
   if (isIosDevice) {
     // Clear all locks ontouchstart/ontouchmove handlers, and the references.
     locks.forEach((lock: Lock) => {
       lock.targetElement.ontouchstart = null;
       lock.targetElement.ontouchmove = null;
-      if (lock.options.hideBodyOverflow) {
-        isBodyOverflowHidden = true;
-      }
     });
 
     if (documentListenerAdded) {
@@ -200,7 +242,9 @@ export const clearAllBodyScrollLocks = (): void => {
     initialClientY = -1;
   }
   
-  if (isBodyOverflowHidden) {
+  if (isIosDevice) {
+    restorePositionSetting();
+  } else {
     restoreOverflowSetting();
   }
 
@@ -216,7 +260,6 @@ export const enableBodyScroll = (targetElement: any): void => {
     return;
   }
 
-  const isBodyOverflowHidden = !isIosDevice || !!locks.find(lock => lock.options.hideBodyOverflow);
   locks = locks.filter(lock => lock.targetElement !== targetElement);
 
   if (isIosDevice) {
@@ -229,7 +272,9 @@ export const enableBodyScroll = (targetElement: any): void => {
     }
   }
 
-  if (isBodyOverflowHidden) {
+  if (isIosDevice) {
+    restorePositionSetting();
+  } else {
     restoreOverflowSetting();
   }
 };
