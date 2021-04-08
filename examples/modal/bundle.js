@@ -87,6 +87,7 @@ enableBodyScrollButton.onclick = function() {
   var documentListenerAdded = false;
   var initialClientY = -1;
   var previousBodyOverflowSetting = void 0;
+  var previousBodyPosition = void 0;
   var previousBodyPaddingRight = void 0;
 
   // returns true if `el` should be allowed to receive touchmove events.
@@ -126,8 +127,9 @@ enableBodyScrollButton.onclick = function() {
       var scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
 
       if (_reserveScrollBarGap && scrollBarGap > 0) {
+        var computedBodyPaddingRight = parseInt(window.getComputedStyle(document.body).getPropertyValue('padding-right'), 10);
         previousBodyPaddingRight = document.body.style.paddingRight;
-        document.body.style.paddingRight = scrollBarGap + 'px';
+        document.body.style.paddingRight = computedBodyPaddingRight + scrollBarGap + 'px';
       }
     }
 
@@ -153,6 +155,64 @@ enableBodyScrollButton.onclick = function() {
       // Restore previousBodyOverflowSetting to undefined
       // so setOverflowHidden knows it can be set again.
       previousBodyOverflowSetting = undefined;
+    }
+  };
+
+  var setPositionFixed = function setPositionFixed() {
+    return window.requestAnimationFrame(function () {
+      // If previousBodyPosition is already set, don't set it again.
+      if (previousBodyPosition === undefined) {
+        previousBodyPosition = {
+          position: document.body.style.position,
+          top: document.body.style.top,
+          left: document.body.style.left
+        };
+
+        // Update the dom inside an animation frame 
+        var _window = window,
+            scrollY = _window.scrollY,
+            scrollX = _window.scrollX,
+            innerHeight = _window.innerHeight;
+
+        document.body.style.position = 'fixed';
+        document.body.style.top = -scrollY;
+        document.body.style.left = -scrollX;
+
+        setTimeout(function () {
+          return window.requestAnimationFrame(function () {
+            // Attempt to check if the bottom bar appeared due to the position change
+            var bottomBarHeight = innerHeight - window.innerHeight;
+            // console.log({
+            //   bottomBarHeight,
+            //   innerHeight,
+            //   innerHeightNew: window.innerHeight,
+            //   scrollY
+            // })
+            if (bottomBarHeight && scrollY >= innerHeight) {
+              // Move the content further up so that the bottom bar doesn't hide it
+              document.body.style.top = -(scrollY + bottomBarHeight);
+            }
+          });
+        }, 300);
+      }
+    });
+  };
+
+  var restorePositionSetting = function restorePositionSetting() {
+    if (previousBodyPosition !== undefined) {
+      // Convert the position from "px" to Int
+      var y = -parseInt(document.body.style.top, 10);
+      var x = -parseInt(document.body.style.left, 10);
+
+      // Restore styles
+      document.body.style.position = previousBodyPosition.position;
+      document.body.style.top = previousBodyPosition.top;
+      document.body.style.left = previousBodyPosition.left;
+
+      // Restore scroll
+      window.scrollTo(x, y);
+
+      previousBodyPosition = undefined;
     }
   };
 
@@ -205,6 +265,12 @@ enableBodyScrollButton.onclick = function() {
     locks = [].concat(_toConsumableArray(locks), [lock]);
 
     if (isIosDevice) {
+      setPositionFixed();
+    } else {
+      setOverflowHidden(options);
+    }
+
+    if (isIosDevice) {
       targetElement.ontouchstart = function (event) {
         if (event.targetTouches.length === 1) {
           // detect single touch.
@@ -222,8 +288,6 @@ enableBodyScrollButton.onclick = function() {
         document.addEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
         documentListenerAdded = true;
       }
-    } else {
-      setOverflowHidden(options);
     }
   };
 
@@ -242,6 +306,10 @@ enableBodyScrollButton.onclick = function() {
 
       // Reset initial clientY.
       initialClientY = -1;
+    }
+
+    if (isIosDevice) {
+      restorePositionSetting();
     } else {
       restoreOverflowSetting();
     }
@@ -268,7 +336,11 @@ enableBodyScrollButton.onclick = function() {
         document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? { passive: false } : undefined);
         documentListenerAdded = false;
       }
-    } else if (!locks.length) {
+    }
+
+    if (isIosDevice) {
+      restorePositionSetting();
+    } else {
       restoreOverflowSetting();
     }
   };
