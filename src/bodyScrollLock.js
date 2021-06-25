@@ -14,7 +14,7 @@ interface Lock {
 
 // Older browsers don't support event options, feature detect it.
 let hasPassiveEvents = false;
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && window.addEventListener) {
   const passiveTestOptions = {
     get passive() {
       hasPassiveEvents = true;
