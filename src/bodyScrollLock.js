@@ -4,7 +4,7 @@
 
 export interface BodyScrollOptions {
   reserveScrollBarGap?: boolean;
-  allowTouchMove?: (el: any) => boolean;
+  allowTouchMove?: (el: any, e: Event) => boolean;
 }
 
 interface Lock {
@@ -41,9 +41,9 @@ let previousBodyPosition;
 let previousBodyPaddingRight;
 
 // returns true if `el` should be allowed to receive touchmove events.
-const allowTouchMove = (el: EventTarget): boolean =>
+const allowTouchMove = (el: EventTarget, e: Event): boolean =>
   locks.some(lock => {
-    if (lock.options.allowTouchMove && lock.options.allowTouchMove(el)) {
+    if (lock.options.allowTouchMove && lock.options.allowTouchMove(el, e)) {
       return true;
     }
 
@@ -57,7 +57,7 @@ const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   // Recall that we do document.addEventListener('touchmove', preventDefault, { passive: false })
   // in disableBodyScroll - so if we provide this opportunity to allowTouchMove, then
   // the touchmove event on document will break.
-  if (allowTouchMove(e.target)) {
+  if (allowTouchMove(e.target, e)) {
     return true;
   }
 
@@ -158,7 +158,7 @@ const isTargetElementTotallyScrolled = (targetElement: any): boolean =>
 const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => {
   const clientY = event.targetTouches[0].clientY - initialClientY;
 
-  if (allowTouchMove(event.target)) {
+  if (allowTouchMove(event.target, event)) {
     return false;
   }
 
