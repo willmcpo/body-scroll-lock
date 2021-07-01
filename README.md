@@ -288,13 +288,19 @@ To disable scrolling on iOS, `disableBodyScroll` prevents `touchmove` events.
 However, there are cases where you have called `disableBodyScroll` on an
 element, but its children still require `touchmove` events to function.
 
+The `allowTouchMove` option should be a function which returns a boolean. It is
+passed two arguments: the element receiving the touch event, and the touch event
+itself. If a truthy value is returned, the touch event will not be prevented.
+
 See below for 2 use cases:
 
 ##### Simple
 
 ```javascript
 disableBodyScroll(container, {
-  allowTouchMove: el => el.tagName === 'TEXTAREA',
+  allowTouchMove(el) {
+    return el.tagName === 'TEXTAREA';
+  },
 });
 ```
 
@@ -304,12 +310,11 @@ Javascript:
 
 ```javascript
 disableBodyScroll(container, {
-  allowTouchMove: el => {
+  allowTouchMove(el, event) {
     while (el && el !== document.body) {
       if (el.getAttribute('body-scroll-lock-ignore') !== null) {
         return true;
       }
-
       el = el.parentElement;
     }
   },
