@@ -2,9 +2,11 @@
 // Adopted and modified solution from Bohdan Didukh (2017)
 // https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
 
+type HandleScrollEvent = TouchEvent;
+
 export interface BodyScrollOptions {
   reserveScrollBarGap?: boolean;
-  allowTouchMove?: (el: any) => boolean;
+  allowTouchMove?: (el: any, event: HandleScrollEvent) => boolean;
 }
 
 interface Lock {
@@ -31,7 +33,6 @@ const isIosDevice =
   window.navigator.platform &&
   (/iP(ad|hone|od)/.test(window.navigator.platform) ||
     (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1));
-type HandleScrollEvent = TouchEvent;
 
 let locks: Array<Lock> = [];
 let documentListenerAdded: boolean = false;
@@ -41,9 +42,9 @@ let previousBodyPosition;
 let previousBodyPaddingRight;
 
 // returns true if `el` should be allowed to receive touchmove events.
-const allowTouchMove = (el: EventTarget): boolean =>
+const allowTouchMove = (el: EventTarget, event: HandleScrollEvent): boolean =>
   locks.some(lock => {
-    if (lock.options.allowTouchMove && lock.options.allowTouchMove(el)) {
+    if (lock.options.allowTouchMove && lock.options.allowTouchMove(el, event)) {
       return true;
     }
 
@@ -57,7 +58,7 @@ const preventDefault = (rawEvent: HandleScrollEvent): boolean => {
   // Recall that we do document.addEventListener('touchmove', preventDefault, { passive: false })
   // in disableBodyScroll - so if we provide this opportunity to allowTouchMove, then
   // the touchmove event on document will break.
-  if (allowTouchMove(e.target)) {
+  if (allowTouchMove(e.target, e)) {
     return true;
   }
 
@@ -158,7 +159,7 @@ const isTargetElementTotallyScrolled = (targetElement: any): boolean =>
 const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => {
   const clientY = event.targetTouches[0].clientY - initialClientY;
 
-  if (allowTouchMove(event.target)) {
+  if (allowTouchMove(event.target, event)) {
     return false;
   }
 
