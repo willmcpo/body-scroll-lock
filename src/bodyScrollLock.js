@@ -115,12 +115,12 @@ const setPositionFixed = () => window.requestAnimationFrame(() => {
       top: document.body.style.top,
       left: document.body.style.left
     };
- 
-    // Update the dom inside an animation frame 
+
+    // Update the dom inside an animation frame
     const { scrollY, scrollX, innerHeight } = window;
     document.body.style.position = 'fixed';
-    document.body.style.top =  -scrollY;
-    document.body.style.left = -scrollX; 
+    document.body.style.top = `${-scrollY}px`;
+    document.body.style.left = `${-scrollX}px`;
 
     setTimeout(() => window.requestAnimationFrame(() => {
       // Attempt to check if the bottom bar appeared due to the position change
@@ -241,7 +241,7 @@ export const clearAllBodyScrollLocks = (): void => {
     // Reset initial clientY.
     initialClientY = -1;
   }
-  
+
   if (isIosDevice) {
     restorePositionSetting();
   } else {
