@@ -3,9 +3,11 @@
   "description": "Example for body scroll lock, with a Modal",
   "author": "diachedelic",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "uglify-js": "^3.14.1"
+  },
   "scripts": {
-    "compile": "browserify ./main.js > bundle.js",
+    "compile": "browserify ./main.js | uglifyjs -cm > bundle.js",
     "deployNow": "now --prod"
   },
   "devDependencies": {

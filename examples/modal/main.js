@@ -1,12 +1,12 @@
-const bodyScrollLock = require('../../lib/bodyScrollLock.js');
+const bodyScrollLock = require('../../lib/bodyScrollLock.min.js');
 
-const disableBodyScrollButton = document.querySelector('.disableBodyScroll');
+const disableBodyScrollButtons = document.querySelectorAll('.disableBodyScroll');
 const enableBodyScrollButton = document.querySelector('.enableBodyScroll');
-const statusElement = document.querySelector('.bodyScrollLockStatus');
+const statusElements = document.querySelectorAll('.bodyScrollLockStatus');
 const modalElement = document.querySelector('.modal');
 const scrollTargetElement = document.querySelector('.scrollTarget');
 
-disableBodyScrollButton.onclick = function() {
+function onDisableBodyScroll() {
   console.info('disableBodyScrollButton');
 
   // show modal
@@ -14,9 +14,13 @@ disableBodyScrollButton.onclick = function() {
 
   bodyScrollLock.disableBodyScroll(scrollTargetElement);
 
-  statusElement.innerHTML = ' &mdash; Scroll Locked';
-  statusElement.style.color = 'red';
+  statusElements.forEach(el => {
+    el.innerHTML = ' &mdash; Scroll Locked';
+    el.style.color = 'red';
+  });
 };
+
+disableBodyScrollButtons.forEach(btn => { btn.onclick = onDisableBodyScroll; });
 
 enableBodyScrollButton.onclick = function() {
   console.info('enableBodyScrollButton');
@@ -26,6 +30,8 @@ enableBodyScrollButton.onclick = function() {
 
   bodyScrollLock.enableBodyScroll(scrollTargetElement);
 
-  statusElement.innerHTML = ' &mdash; Scroll Unlocked';
-  statusElement.style.color = '';
+  statusElements.forEach(el => {
+    el.innerHTML = ' &mdash; Scroll Unlocked';
+    el.style.color = '';
+  });
 };
