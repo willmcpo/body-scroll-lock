@@ -182,8 +182,8 @@ initialize('bottom')
 
       // Restore styles
       document.body.style.position = previousBodyPosition.position;
-      document.body.style.top = previousBodyPosition.top + 'px';
-      document.body.style.left = previousBodyPosition.left + 'px';
+      document.body.style.top = previousBodyPosition.top;
+      document.body.style.left = previousBodyPosition.left;
 
       // Restore scroll
       window.scrollTo(x, y);
