@@ -165,29 +165,11 @@ initialize('bottom')
         // Update the dom inside an animation frame 
         var _window = window,
             scrollY = _window.scrollY,
-            scrollX = _window.scrollX,
-            innerHeight = _window.innerHeight;
+            scrollX = _window.scrollX;
 
         document.body.style.position = 'fixed';
-        document.body.style.top = -scrollY;
-        document.body.style.left = -scrollX;
-
-        setTimeout(function () {
-          return window.requestAnimationFrame(function () {
-            // Attempt to check if the bottom bar appeared due to the position change
-            var bottomBarHeight = innerHeight - window.innerHeight;
-            // console.log({
-            //   bottomBarHeight,
-            //   innerHeight,
-            //   innerHeightNew: window.innerHeight,
-            //   scrollY
-            // })
-            if (bottomBarHeight && scrollY >= innerHeight) {
-              // Move the content further up so that the bottom bar doesn't hide it
-              document.body.style.top = -(scrollY + bottomBarHeight);
-            }
-          });
-        }, 300);
+        document.body.style.top = -scrollY + 'px';
+        document.body.style.left = -scrollX + 'px';
       }
     });
   };
