@@ -232,7 +232,7 @@ export const clearAllBodyScrollLocks = (): void => {
     // Reset initial clientY.
     initialClientY = -1;
   }
-  
+
   if (isIosDevice) {
     restorePositionSetting();
   } else {
