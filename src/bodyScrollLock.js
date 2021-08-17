@@ -153,7 +153,7 @@ const restorePositionSetting = () => {
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
 const isTargetElementTotallyScrolled = (targetElement: any): boolean =>
-  targetElement ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight : false;
+  (targetElement.scrollHeight - Math.abs(targetElement.scrollTop)) === targetElement.clientHeight;
 
 const handleScroll = (event: HandleScrollEvent, targetElement: any): boolean => {
   const clientY = event.targetTouches[0].clientY - initialClientY;
