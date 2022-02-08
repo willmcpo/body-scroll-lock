@@ -133,7 +133,7 @@ const setPositionFixed = () => window.requestAnimationFrame(() => {
   }
 });
 
-const restorePositionSetting = () => {
+const restorePositionSetting = () => window.requestAnimationFrame(() => {
   if (previousBodyPosition !== undefined) {
     // Convert the position from "px" to Int
     const y = -parseInt(document.body.style.top, 10);
@@ -149,7 +149,7 @@ const restorePositionSetting = () => {
 
     previousBodyPosition = undefined;
   }
-};
+});
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
 const isTargetElementTotallyScrolled = (targetElement: any): boolean =>
