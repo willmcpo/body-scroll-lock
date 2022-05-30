@@ -21,15 +21,18 @@ if (typeof window !== 'undefined') {
       return undefined;
     },
   };
-  window.addEventListener('testPassive', null, passiveTestOptions);
-  window.removeEventListener('testPassive', null, passiveTestOptions);
+  // PURE marks for bundlers so they can tree-shake this code
+  // if `hasPassiveEvents` is not used
+  /* @__PURE__ */ window.addEventListener('testPassive', null, passiveTestOptions);
+  /* @__PURE__ */ window.removeEventListener('testPassive', null, passiveTestOptions);
 }
 
 const isIosDevice =
   typeof window !== 'undefined' &&
   window.navigator &&
   window.navigator.platform &&
-  (/iP(ad|hone|od)/.test(window.navigator.platform) ||
+  // PURE mark for tree-shakeability
+  /* @__PURE__ */ (/iP(ad|hone|od)/.test(window.navigator.platform) ||
     (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1));
 type HandleScrollEvent = TouchEvent;
 
