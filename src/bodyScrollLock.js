@@ -272,9 +272,11 @@ export const enableBodyScroll = (targetElement: any): void => {
     }
   }
 
-  if (isIosDevice) {
-    restorePositionSetting();
-  } else {
-    restoreOverflowSetting();
+  if (locks.length === 0) {
+    if (isIosDevice) {
+      restorePositionSetting();
+    } else {
+      restoreOverflowSetting();
+    }
   }
 };
