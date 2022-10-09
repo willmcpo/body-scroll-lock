@@ -113,7 +113,8 @@ const setPositionFixed = () => window.requestAnimationFrame(() => {
     previousBodyPosition = {
       position: document.body.style.position,
       top: document.body.style.top,
-      left: document.body.style.left
+      left: document.body.style.left,
+      right: document.body.style.right
     };
 
     // Update the dom inside an animation frame
@@ -121,6 +122,7 @@ const setPositionFixed = () => window.requestAnimationFrame(() => {
     document.body.style.position = 'fixed';
     document.body.style.top = `${-scrollY}px`;
     document.body.style.left = `${-scrollX}px`;
+    document.body.style.right = 0;
 
     setTimeout(() => window.requestAnimationFrame(() => {
       // Attempt to check if the bottom bar appeared due to the position change
@@ -143,6 +145,7 @@ const restorePositionSetting = () => {
     document.body.style.position = previousBodyPosition.position;
     document.body.style.top = previousBodyPosition.top;
     document.body.style.left = previousBodyPosition.left;
+    document.body.style.right = previousBodyPosition.right;
 
     // Restore scroll
     window.scrollTo(x, y);
