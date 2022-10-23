@@ -76,22 +76,22 @@ const setOverflowHidden = (options?: BodyScrollOptions) => {
     const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
 
     if (reserveScrollBarGap && scrollBarGap > 0) {
-      const computedBodyPaddingRight = parseInt(window.getComputedStyle(document.body).getPropertyValue('padding-right'), 10);
-      previousBodyPaddingRight = document.body.style.paddingRight;
-      document.body.style.paddingRight = `${computedBodyPaddingRight + scrollBarGap}px`;
+      const computedBodyPaddingRight = parseInt(window.getComputedStyle(window.top.document.body).getPropertyValue('padding-right'), 10);
+      previousBodyPaddingRight = window.top.document.body.style.paddingRight;
+      window.top.document.body.style.paddingRight = `${computedBodyPaddingRight + scrollBarGap}px`;
     }
   }
 
   // If previousBodyOverflowSetting is already set, don't set it again.
   if (previousBodyOverflowSetting === undefined) {
-    previousBodyOverflowSetting = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    previousBodyOverflowSetting = window.top.document.body.style.overflow;
+    window.top.document.body.style.overflow = 'hidden';
   }
 };
 
 const restoreOverflowSetting = () => {
   if (previousBodyPaddingRight !== undefined) {
-    document.body.style.paddingRight = previousBodyPaddingRight;
+    window.top.document.body.style.paddingRight = previousBodyPaddingRight;
 
     // Restore previousBodyPaddingRight to undefined so setOverflowHidden knows it
     // can be set again.
@@ -99,7 +99,7 @@ const restoreOverflowSetting = () => {
   }
 
   if (previousBodyOverflowSetting !== undefined) {
-    document.body.style.overflow = previousBodyOverflowSetting;
+    window.top.document.body.style.overflow = previousBodyOverflowSetting;
 
     // Restore previousBodyOverflowSetting to undefined
     // so setOverflowHidden knows it can be set again.
@@ -111,38 +111,29 @@ const setPositionFixed = () => window.requestAnimationFrame(() => {
   // If previousBodyPosition is already set, don't set it again.
   if (previousBodyPosition === undefined) {
     previousBodyPosition = {
-      position: document.body.style.position,
-      top: document.body.style.top,
-      left: document.body.style.left
+      position: window.top.document.body.style.position,
+      top: window.top.document.body.style.top,
+      left: window.top.document.body.style.left
     };
 
     // Update the dom inside an animation frame
     const { scrollY, scrollX, innerHeight } = window;
-    document.body.style.position = 'fixed';
-    document.body.style.top = `${-scrollY}px`;
-    document.body.style.left = `${-scrollX}px`;
-
-    setTimeout(() => window.requestAnimationFrame(() => {
-      // Attempt to check if the bottom bar appeared due to the position change
-      const bottomBarHeight = innerHeight - window.innerHeight;
-      if (bottomBarHeight && scrollY >= innerHeight) {
-        // Move the content further up so that the bottom bar doesn't hide it
-        document.body.style.top = -(scrollY + bottomBarHeight);
-      }
-    }), 300)
+    window.top.document.body.style.position = 'fixed';
+    window.top.document.body.style.top = `${-scrollY}px`;
+    window.top.document.body.style.left = `${-scrollX}px`;
   }
 });
 
 const restorePositionSetting = () => {
   if (previousBodyPosition !== undefined) {
     // Convert the position from "px" to Int
-    const y = -parseInt(document.body.style.top, 10);
-    const x = -parseInt(document.body.style.left, 10);
+    const y = -parseInt(window.top.document.body.style.top, 10);
+    const x = -parseInt(window.top.document.body.style.left, 10);
 
     // Restore styles
-    document.body.style.position = previousBodyPosition.position;
-    document.body.style.top = previousBodyPosition.top;
-    document.body.style.left = previousBodyPosition.left;
+    window.top.document.body.style.position = previousBodyPosition.position;
+    window.top.document.body.style.top = previousBodyPosition.top;
+    window.top.document.body.style.left = previousBodyPosition.left;
 
     // Restore scroll
     window.scrollTo(x, y);
