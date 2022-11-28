@@ -127,7 +127,7 @@ const setPositionFixed = () => window.requestAnimationFrame(() => {
       const bottomBarHeight = innerHeight - window.innerHeight;
       if (bottomBarHeight && scrollY >= innerHeight) {
         // Move the content further up so that the bottom bar doesn't hide it
-        document.body.style.top = -(scrollY + bottomBarHeight);
+        document.body.style.top = `${-(scrollY + bottomBarHeight)}px`;
       }
     }), 300)
   }
