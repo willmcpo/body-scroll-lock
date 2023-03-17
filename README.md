@@ -166,6 +166,52 @@ class SomeOtherComponent extends React.Component {
 ```
 
 
+##### React Hooks/ES6 with Refs
+
+```javascript
+// 1. Import the functions
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+
+const SomeComponent = () => {
+  // 2. Initialise your state and ref here
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+  
+  useEffect(() => {
+    // 3. Check for the target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav).
+    // Specifically, the target element is the one we would like to allow scroll on (NOT a parent of that element).
+    // This is also the element to apply the CSS '-webkit-overflow-scrolling: touch;' if desired.
+    
+    if (ref.current) {
+      if (open) {   
+        // 4. Disable body scroll when open
+        disabledBodyScrollLock(ref.current)
+      } else {
+        // 5. Re-enable body scroll when closed
+        enableBodyScrollLock(ref.current)
+      }
+    }
+
+    return () => {
+        // 5. Useful if we have called disableBodyScroll for multiple target elements,
+        // and we just want a kill-switch to undo all that.
+        // OR useful for if the `hideTargetElement()` function got circumvented eg. visitor
+        // clicks a link which takes him/her to a different page within the app.
+      clearAllBodyScrollLocks() 
+    }
+  }, [open])
+
+  return (
+      // 6. Pass your ref to SomeOtherComponent
+      <SomeOtherComponent ref={ref}>
+        {/* some JSX to go here */}
+      </SomeOtherComponent>
+    );
+  }
+}
+```
+
+
 ##### Angular
 
 ```javascript
