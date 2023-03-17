@@ -193,16 +193,16 @@ const SomeComponent = () => {
     }
 
     return () => {
-        // 5. Useful if we have called disableBodyScroll for multiple target elements,
-        // and we just want a kill-switch to undo all that.
-        // OR useful for if the `hideTargetElement()` function got circumvented eg. visitor
-        // clicks a link which takes him/her to a different page within the app.
+      // 5. Useful if we have called disableBodyScroll for multiple target elements,
+      // and we just want a kill-switch to undo all that.
+      // OR useful for if the `hideTargetElement()` function got circumvented eg. visitor
+      // clicks a link which takes him/her to a different page within the app.
       clearAllBodyScrollLocks() 
     }
   }, [open])
-
+  
+  // 6. Pass your ref to SomeOtherComponent
   return (
-      // 6. Pass your ref to SomeOtherComponent
       <SomeOtherComponent ref={ref}>
         {/* some JSX to go here */}
       </SomeOtherComponent>
