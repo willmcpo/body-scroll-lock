@@ -165,29 +165,25 @@ enableBodyScrollButton.onclick = function() {
         previousBodyPosition = {
           position: document.body.style.position,
           top: document.body.style.top,
-          left: document.body.style.left
+          left: document.body.style.left,
+          right: document.body.style.right
         };
 
-        // Update the dom inside an animation frame 
+        // Update the dom inside an animation frame
         var _window = window,
             scrollY = _window.scrollY,
             scrollX = _window.scrollX,
             innerHeight = _window.innerHeight;
 
         document.body.style.position = 'fixed';
-        document.body.style.top = -scrollY;
-        document.body.style.left = -scrollX;
+        document.body.style.top = -scrollY + 'px';
+        document.body.style.left = -scrollX + 'px';
+        document.body.style.right = 0;
 
         setTimeout(function () {
           return window.requestAnimationFrame(function () {
             // Attempt to check if the bottom bar appeared due to the position change
             var bottomBarHeight = innerHeight - window.innerHeight;
-            // console.log({
-            //   bottomBarHeight,
-            //   innerHeight,
-            //   innerHeightNew: window.innerHeight,
-            //   scrollY
-            // })
             if (bottomBarHeight && scrollY >= innerHeight) {
               // Move the content further up so that the bottom bar doesn't hide it
               document.body.style.top = -(scrollY + bottomBarHeight);
@@ -208,6 +204,7 @@ enableBodyScrollButton.onclick = function() {
       document.body.style.position = previousBodyPosition.position;
       document.body.style.top = previousBodyPosition.top;
       document.body.style.left = previousBodyPosition.left;
+      document.body.style.right = previousBodyPosition.right;
 
       // Restore scroll
       window.scrollTo(x, y);

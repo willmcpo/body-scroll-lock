@@ -1,12 +1,11 @@
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       body {
         padding: 35px;
         font-family: Helvetica;
         color: #555555;
-        left: 0;
-        right: 0;
         margin-left: 0;
         margin-right: 0;
       }
@@ -25,11 +24,8 @@
         font-size: 20px;
         padding: 10px 30px;
         border-radius: 8px;
+        margin: 5px 20px;
         outline: none;
-      }
-
-      button:nth-child(2) {
-        margin-left: 40px;
       }
 
       button:focus {
@@ -52,6 +48,10 @@
 
       .mainHeading {
         display: inline;
+      }
+
+      .wide {
+        width: 3000px;
       }
 
       .scrollTarget {
@@ -535,8 +535,24 @@
       </p>
     </div>
     <div class="main">
-      <h3 class="mainHeading">Main Body Content</h3>
+      <h3 class="mainHeading">Wide Content</h3>
       <span class="bodyScrollLockStatus bottom"> &mdash; Scroll Unlocked</span>
+      <p class="wide">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras blandit mattis dui quis mollis. Suspendisse
+        posuere justo at fermentum commodo. Duis sed vulputate ex. Pellentesque tortor odio, pretium id tortor id,
+        sagittis efficitur orci. Maecenas nulla odio, laoreet sed mi sit amet, auctor dictum felis. Fusce condimentum
+        aliquam erat. Pellentesque quis ultricies ligula, nec congue tellus. Pellentesque habitant morbi tristique
+        senectus et netus et malesuada fames ac turpis egestas. Pellentesque ac erat convallis, dapibus tellus sed,
+        eleifend ipsum. Donec porta ligula id risus laoreet, at tempus neque consectetur. Aliquam malesuada pharetra
+        nisi sed hendrerit. Integer molestie turpis a fringilla molestie. Nulla vehicula mattis mi. Morbi ut pretium
+        libero. Curabitur rutrum aliquam nulla quis luctus. Curabitur porta felis vel ex maximus condimentum. Nunc
+        tristique congue tempor. Fusce quis quam interdum, eleifend mi at, congue diam. Vestibulum ante ipsum primis in
+        faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam vitae tellus tempor, pellentesque ante vitae,
+        aliquam felis. Phasellus arcu arcu, vestibulum ut vulputate facilisis, tristique at sapien. Nunc pharetra
+        vulputate nisl, nec vestibulum mi commodo vitae. Orci varius natoque penatibus et magnis dis parturient montes,
+        nascetur ridiculus mus. Sed quam diam, mollis a odio quis, pretium pretium sapien. Integer ac leo sagittis,
+        eleifend ex quis, semper sem. Etiam sed euismod ex, at mollis elit.
+      </p>
     </div>
 
     <script src="bundle.js"></script>
